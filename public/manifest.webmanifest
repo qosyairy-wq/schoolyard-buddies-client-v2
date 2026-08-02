@@ -1,0 +1,17 @@
+{
+  "name": "Schoolyard Buddies: Quest for Knowledge",
+  "short_name": "Schoolyard Buddies",
+  "description": "A family-friendly educational voxel adventure.",
+  "id": "/mobile.html",
+  "start_url": "/mobile.html?pwa=1",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#59b9eb",
+  "theme_color": "#0f66bd",
+  "icons": [
+    {"src":"/icons/icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"/icons/icon-512.png","sizes":"512x512","type":"image/png"},
+    {"src":"/icons/apple-touch-icon.png","sizes":"180x180","type":"image/png"}
+  ]
+}
