@@ -8,13 +8,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="/mobile.css">
+  <link rel="stylesheet" href="/mobile.css?v=1.0.2">
   <title>Schoolyard Buddies Mobile</title>
 </head>
 <body>
   <div id="boot" class="screen boot-screen">
     <img src="/assets/schoolyard-logo.png" alt="Schoolyard Buddies">
-    <h1>Mobile Campus</h1>
+    <h1>Mobile Campus</h1><small class="build-badge">Build 1.0.2</small>
     <p id="boot-status">Loading the lightweight game engine…</p>
     <div class="loader"><i></i></div>
     <button id="boot-retry" class="button gold" hidden>Retry</button>
@@ -29,7 +29,7 @@
       <label>Date of birth<input id="player-dob" type="date"></label>
       <div class="level-card"><b id="player-year">Enter date of birth</b><span id="player-age">The learning year will be selected automatically.</span></div>
       <fieldset><legend>Starter colour</legend><div id="shirt-colours" class="swatches"></div></fieldset>
-      <button id="enter-plaza" class="button gold">Enter Waiting Plaza</button>
+      <button id="enter-plaza" class="button gold" type="button">Enter Waiting Plaza</button>
       <a class="desktop-link" href="/desktop.html?manual=1">Open full desktop version</a>
     </div>
   </section>
@@ -101,8 +101,8 @@
     </div>
   </section>
 
-  <script src="/config.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="/mobile.js" defer></script>
+  <script src="/config.js?v=1.0.2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
+  <script src="/mobile.js?v=1.0.2" defer></script>
 </body>
 </html>
