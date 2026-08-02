@@ -3,7 +3,7 @@
   "short_name": "Schoolyard Buddies",
   "description": "A family-friendly educational voxel adventure.",
   "id": "/",
-  "start_url": "/?pwa=1&v=2.0.2",
+  "start_url": "/?pwa=1&v=2.0.4",
   "scope": "/",
   "display": "standalone",
   "orientation": "landscape",
