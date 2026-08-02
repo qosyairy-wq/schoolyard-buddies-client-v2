@@ -20,20 +20,21 @@
   <h1>Choose your device</h1>
   <p id="status">Detecting the best version…</p>
   <div class="buttons">
-    <a class="btn primary" href="/mobile.html?manual=1&v=1.0.5">Mobile / Tablet</a>
-    <a class="btn" href="/desktop.html?manual=1&v=1.0.5">Desktop PC</a>
+    <a class="btn primary" href="/mobile.html?manual=1&v=2.0.1">Mobile / Tablet</a>
+    <a class="btn" href="/desktop.html?manual=1&v=2.0.1">Desktop PC</a>
   </div>
 </main>
 <script>
 (() => {
   const query = new URLSearchParams(location.search);
-  if (query.get('desktop') === '1') return location.replace('/desktop.html?source=router&v=1.0.5');
-  if (query.get('mobile') === '1') return location.replace('/mobile.html?source=router&v=1.0.5');
+  if (query.get('desktop') === '1') return location.replace('/desktop.html?source=router&v=2.0.1');
+  if (query.get('mobile') === '1') return location.replace('/mobile.html?source=router&v=2.0.1');
   const coarse = matchMedia('(pointer: coarse)').matches;
   const small = Math.min(screen.width, screen.height) <= 900;
   const uaMobile = navigator.userAgentData?.mobile === true || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  const destination = '/desktop.html?source=' + ((uaMobile || (coarse && small)) ? 'auto-mobile' : 'auto-desktop') + '&v=1.0.5';
-  document.getElementById('status').textContent = (uaMobile || (coarse && small)) ? 'Opening the full game with mobile controls…' : 'Opening desktop version…';
+  const isMobile = uaMobile || (coarse && small);
+  const destination = (isMobile ? '/mobile.html?source=auto-mobile' : '/desktop.html?source=auto-desktop') + '&v=2.0.1';
+  document.getElementById('status').textContent = isMobile ? 'Opening the full game with mobile controls…' : 'Opening desktop version…';
   setTimeout(() => location.replace(destination), 120);
 })();
 </script>
