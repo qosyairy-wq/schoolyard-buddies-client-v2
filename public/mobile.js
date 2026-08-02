@@ -3,14 +3,19 @@
 
   const $ = (id) => document.getElementById(id);
   const config = window.SYB_CONFIG || {};
-  const BUILD = 'rebuild-1.0.2';
+  const BUILD = 'rebuild-1.0.3';
   const STORAGE_KEY = 'syb_mobile_profile_v1';
   const ENDPOINT_KEY = 'syb_multiplayer_endpoint_v1';
   const ROOM_KEY = 'syb_multiplayer_room_v1';
-  const colors = [0x78b1de, 0xe88baa, 0x8fc9b0, 0xb7a6d9, 0xf0b190, 0xe8d27d];
+  const shirtColors = [0x78b1de, 0xe88baa, 0x8fc9b0, 0xb7a6d9, 0xf0b190, 0xe8d27d];
+  const skinColors = [0xffd8bd, 0xf4c49e, 0xe2a276, 0xc98252, 0xb66c3c, 0x9a572f, 0x754029, 0x4f2c22];
+  const headwearColors = [0xf7f7f7, 0xf0b0c5, 0xa7cbea, 0xb9a8dc, 0xa8d4c2, 0xf2b99d, 0x20252d, 0x172b47];
+  const pantsColors = [0x20252d, 0x172b47, 0x435a73, 0x74859a, 0x82778f, 0x85837b];
+  const shoeColors = [0x20252d, 0x172b47, 0xee9db5, 0x9ec6e7, 0x96cdbf, 0xb7a8d9, 0xeab093, 0xc7d0d7];
+  const bagColors = [0x9ec6e7, 0xeeafc1, 0xa8d4c2, 0xb7a8d9, 0xefb99e, 0xe5cf78];
 
   const state = {
-    profile: { name: '', dob: '', gender: 'female', shirt: colors[0], year: 1, age: 7 },
+    profile: { name: '', dob: '', gender: 'female', skin: skinColors[1], headwear: headwearColors[0], shirt: shirtColors[0], pants: pantsColors[1], shoes: shoeColors[4], bag: bagColors[1], year: 1, age: 7 },
     stats: { boxes: 0, stars: 0, coins: 0 },
     mode: 'boot',
     zone: 'plaza',
@@ -25,7 +30,7 @@
     nearest: null,
     quizIndex: 0,
     quizScore: 0,
-    settings: { shadows: true, traffic: true, fps: 30 }
+    settings: { shadows: false, traffic: false, fps: 30 }
   };
 
   let scene;
@@ -79,7 +84,7 @@
   }
 
   function isOverlayOpen() {
-    return ['menu', 'online-panel', 'chat-panel', 'quiz-panel', 'map-panel', 'settings-panel']
+    return ['menu', 'character-panel', 'online-panel', 'chat-panel', 'quiz-panel', 'map-panel', 'settings-panel']
       .some((id) => !$(id).hidden);
   }
 
@@ -142,8 +147,96 @@
     return true;
   }
 
+  function colorHex(value, fallback = 0xffffff) {
+    const number = Number.isFinite(Number(value)) ? Number(value) : fallback;
+    return `#${(number >>> 0).toString(16).padStart(6, '0').slice(-6)}`;
+  }
+
+  function normalizeProfile() {
+    const defaults = {
+      name: '', dob: '', gender: 'female', skin: skinColors[1], headwear: headwearColors[0],
+      shirt: shirtColors[0], pants: pantsColors[1], shoes: shoeColors[4], bag: bagColors[1], year: 1, age: 7
+    };
+    Object.assign(state.profile, defaults, state.profile || {});
+    for (const key of ['skin', 'headwear', 'shirt', 'pants', 'shoes', 'bag']) {
+      state.profile[key] = Number(state.profile[key] ?? defaults[key]);
+    }
+    state.profile.gender = state.profile.gender === 'male' ? 'male' : 'female';
+  }
+
+  function characterSvg(profile = state.profile) {
+    const skin = colorHex(profile.skin, skinColors[1]);
+    const headwear = colorHex(profile.headwear, profile.gender === 'male' ? headwearColors[6] : headwearColors[0]);
+    const shirt = colorHex(profile.shirt, shirtColors[0]);
+    const pants = colorHex(profile.pants, pantsColors[1]);
+    const shoes = colorHex(profile.shoes, shoeColors[4]);
+    const bag = colorHex(profile.bag, bagColors[1]);
+    const female = profile.gender !== 'male';
+    const headLayer = female
+      ? `<path d="M105 58h270v34h36v250h-46v56h-54v-61H169v61h-54v-56H69V92h36z" fill="${headwear}" stroke="#153456" stroke-width="9" stroke-linejoin="round"/>`
+      : `<path d="M106 62h268v42h35v83h-34v-40H105v40H71v-83h35z" fill="${headwear}" stroke="#153456" stroke-width="9" stroke-linejoin="round"/><path d="M114 72h252v38H114z" fill="${headwear}"/>`;
+    const chin = female ? `<rect x="151" y="313" width="178" height="47" rx="8" fill="${headwear}"/>` : '';
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 560">
+      <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#68b9ef"/><stop offset="1" stop-color="#235596"/></linearGradient></defs>
+      <rect width="480" height="560" rx="34" fill="url(#bg)"/><ellipse cx="240" cy="520" rx="128" ry="24" fill="#12355e" opacity=".42"/>
+      <rect x="315" y="330" width="73" height="126" rx="12" fill="${bag}" stroke="#153456" stroke-width="9"/>
+      <rect x="145" y="404" width="78" height="99" rx="9" fill="${pants}" stroke="#153456" stroke-width="9"/><rect x="257" y="404" width="78" height="99" rx="9" fill="${pants}" stroke="#153456" stroke-width="9"/>
+      <rect x="132" y="486" width="101" height="42" rx="10" fill="${shoes}" stroke="#153456" stroke-width="9"/><rect x="247" y="486" width="101" height="42" rx="10" fill="${shoes}" stroke="#153456" stroke-width="9"/>
+      <rect x="104" y="324" width="272" height="116" rx="12" fill="${shirt}" stroke="#153456" stroke-width="9"/>
+      <rect x="70" y="335" width="52" height="105" rx="12" fill="${shirt}" stroke="#153456" stroke-width="9"/><rect x="358" y="335" width="52" height="105" rx="12" fill="${shirt}" stroke="#153456" stroke-width="9"/>
+      <rect x="78" y="417" width="44" height="40" rx="8" fill="${skin}" stroke="#153456" stroke-width="8"/><rect x="358" y="417" width="44" height="40" rx="8" fill="${skin}" stroke="#153456" stroke-width="8"/>
+      ${headLayer}<rect x="124" y="122" width="232" height="220" rx="7" fill="${skin}" stroke="#153456" stroke-width="9"/>${chin}
+      <rect x="168" y="190" width="34" height="88" rx="5" fill="#452d24"/><rect x="278" y="190" width="34" height="88" rx="5" fill="#452d24"/>
+      <rect x="140" y="274" width="48" height="22" rx="4" fill="#f393a9"/><rect x="292" y="274" width="48" height="22" rx="4" fill="#f393a9"/>
+      <path d="M205 306h70" stroke="#7e4935" stroke-width="8" stroke-linecap="round"/>
+      <path d="M154 368h172" stroke="#e9f7ff" stroke-width="9"/><path d="M240 335v93" stroke="#e9f7ff" stroke-width="9"/>
+    </svg>`;
+  }
+
+  function render2DPreview() {
+    const source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(characterSvg())}`;
+    ['setup-avatar-image', 'menu-avatar-image', 'character-preview-image'].forEach((id) => {
+      const image = $(id);
+      if (image) image.src = source;
+    });
+    if ($('character-preview-name')) $('character-preview-name').textContent = state.profile.name || (state.profile.gender === 'female' ? 'Alisha' : 'Adam');
+    if ($('headwear-legend')) $('headwear-legend').textContent = state.profile.gender === 'female' ? 'Hijab colour' : 'Hair colour';
+  }
+
+  function makeSwatch(containerId, palette, profileKey) {
+    const container = $(containerId);
+    if (!container) return;
+    container.replaceChildren();
+    palette.forEach((color) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `swatch${Number(state.profile[profileKey]) === color ? ' selected' : ''}`;
+      button.style.background = colorHex(color);
+      button.setAttribute('aria-label', `${profileKey} ${colorHex(color)}`);
+      button.addEventListener('click', () => {
+        state.profile[profileKey] = color;
+        [...container.children].forEach((item) => item.classList.toggle('selected', item === button));
+        render2DPreview();
+        applyLocalAppearance();
+        saveProfile();
+      });
+      container.appendChild(button);
+    });
+  }
+
+  function buildCharacterEditor() {
+    makeSwatch('edit-skin', skinColors, 'skin');
+    makeSwatch('edit-headwear', headwearColors, 'headwear');
+    makeSwatch('edit-shirt', shirtColors, 'shirt');
+    makeSwatch('edit-pants', pantsColors, 'pants');
+    makeSwatch('edit-shoes', shoeColors, 'shoes');
+    makeSwatch('edit-bag', bagColors, 'bag');
+    render2DPreview();
+  }
+
   function setupProfileUI() {
     loadProfile();
+    normalizeProfile();
     $('player-name').value = state.profile.name || '';
     $('player-dob').value = state.profile.dob || '';
 
@@ -151,28 +244,13 @@
       button.classList.toggle('selected', button.dataset.gender === state.profile.gender);
       button.addEventListener('click', () => {
         state.profile.gender = button.dataset.gender;
+        state.profile.headwear = state.profile.gender === 'female' ? headwearColors[0] : headwearColors[6];
         document.querySelectorAll('[data-gender]').forEach((item) => item.classList.toggle('selected', item === button));
-        $('setup-avatar span').textContent = state.profile.gender === 'female' ? '👧' : '👦';
+        render2DPreview();
       });
     });
 
-    $('setup-avatar span').textContent = state.profile.gender === 'female' ? '👧' : '👦';
-
-    const swatches = $('shirt-colours');
-    swatches.replaceChildren();
-    colors.forEach((color) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = `swatch${color === Number(state.profile.shirt) ? ' selected' : ''}`;
-      button.style.background = `#${color.toString(16).padStart(6, '0')}`;
-      button.setAttribute('aria-label', `Starter colour #${color.toString(16).padStart(6, '0')}`);
-      button.addEventListener('click', () => {
-        state.profile.shirt = color;
-        [...swatches.children].forEach((item) => item.classList.toggle('selected', item === button));
-      });
-      swatches.appendChild(button);
-    });
-
+    render2DPreview();
     $('player-dob').addEventListener('input', calculateYear);
     $('player-dob').addEventListener('change', calculateYear);
     if (state.profile.dob) calculateYear();
@@ -182,6 +260,7 @@
       state.profile.name = $('player-name').value.trim() || (state.profile.gender === 'female' ? 'Alisha' : 'Adam');
       calculateYear();
       saveProfile();
+      render2DPreview();
       await startGame();
     });
   }
@@ -201,18 +280,29 @@
 
   function makeCharacter(profile, remote = false) {
     const group = new THREE.Group();
-    const skin = Number(profile.skin || 0xffc89f);
-    const body = box(group, [0.9, 1.1, 0.55], [0, 1.35, 0], Number(profile.shirt || 0x78b1de));
+    const skin = Number(profile.skin || skinColors[1]);
+    const body = box(group, [0.9, 1.1, 0.55], [0, 1.35, 0], Number(profile.shirt || shirtColors[0]));
     const head = box(group, [1.1, 1.05, 1.0], [0, 2.35, 0], skin);
-    const hair = box(group, [1.16, 0.28, 1.06], [0, 2.88, 0], profile.gender === 'male' ? 0x3b2b23 : 0xf7f7f7);
-    const legL = box(group, [0.32, 0.72, 0.36], [-0.22, 0.48, 0], 0x203854);
-    const legR = box(group, [0.32, 0.72, 0.36], [0.22, 0.48, 0], 0x203854);
+    const headwearColor = Number(profile.headwear || (profile.gender === 'male' ? headwearColors[6] : headwearColors[0]));
+    let hair;
+    if (profile.gender === 'male') {
+      hair = box(group, [1.16, 0.32, 1.06], [0, 2.88, 0], headwearColor);
+    } else {
+      hair = new THREE.Group();
+      box(hair, [1.16, 0.24, 1.06], [0, 2.88, 0], headwearColor);
+      box(hair, [0.18, 1.04, 1.06], [-0.64, 2.35, 0], headwearColor);
+      box(hair, [0.18, 1.04, 1.06], [0.64, 2.35, 0], headwearColor);
+      box(hair, [0.92, 0.18, 1.06], [0, 1.82, 0], headwearColor);
+      group.add(hair);
+    }
+    const legL = box(group, [0.32, 0.72, 0.36], [-0.22, 0.48, 0], Number(profile.pants || pantsColors[1]));
+    const legR = box(group, [0.32, 0.72, 0.36], [0.22, 0.48, 0], Number(profile.pants || pantsColors[1]));
     const armL = box(group, [0.25, 0.9, 0.28], [-0.64, 1.42, 0], skin);
     const armR = box(group, [0.25, 0.9, 0.28], [0.64, 1.42, 0], skin);
-    box(group, [0.38, 0.18, 0.55], [-0.22, 0.05, 0.03], 0x6ec9c3);
-    box(group, [0.38, 0.18, 0.55], [0.22, 0.05, 0.03], 0x6ec9c3);
-    const backpack = box(group, [0.65, 0.78, 0.22], [0, 1.45, 0.4], 0xe88baa);
-    group.userData.parts = { body, head, hair, legL, legR, armL, armR, backpack };
+    const shoeL = box(group, [0.38, 0.18, 0.55], [-0.22, 0.05, 0.03], Number(profile.shoes || shoeColors[4]));
+    const shoeR = box(group, [0.38, 0.18, 0.55], [0.22, 0.05, 0.03], Number(profile.shoes || shoeColors[4]));
+    const backpack = box(group, [0.65, 0.78, 0.22], [0, 1.45, 0.4], Number(profile.bag || bagColors[1]));
+    group.userData.parts = { body, head, hair, legL, legR, armL, armR, shoeL, shoeR, backpack };
 
     if (remote) {
       const canvas = document.createElement('canvas');
@@ -233,6 +323,52 @@
     }
 
     return group;
+  }
+
+  function setPartColor(part, value) {
+    if (!part) return;
+    if (Array.isArray(part)) {
+      part.forEach((item) => setPartColor(item, value));
+      return;
+    }
+    if (part.material?.color) part.material.color.setHex(Number(value));
+    if (part.traverse) part.traverse((child) => {
+      if (child !== part && child.material?.color) child.material.color.setHex(Number(value));
+    });
+  }
+
+  function applyAppearanceToGroup(group, profile) {
+    const parts = group?.userData?.parts;
+    if (!parts) return;
+    setPartColor(parts.body, profile.shirt || shirtColors[0]);
+    setPartColor(parts.head, profile.skin || skinColors[1]);
+    setPartColor(parts.armL, profile.skin || skinColors[1]);
+    setPartColor(parts.armR, profile.skin || skinColors[1]);
+    setPartColor(parts.hair, profile.headwear || (profile.gender === 'male' ? headwearColors[6] : headwearColors[0]));
+    setPartColor(parts.legL, profile.pants || pantsColors[1]);
+    setPartColor(parts.legR, profile.pants || pantsColors[1]);
+    setPartColor(parts.shoeL, profile.shoes || shoeColors[4]);
+    setPartColor(parts.shoeR, profile.shoes || shoeColors[4]);
+    setPartColor(parts.backpack, profile.bag || profile.backpack || bagColors[1]);
+  }
+
+  function appearancePayload() {
+    return {
+      gender: state.profile.gender,
+      skin: state.profile.skin,
+      headwear: state.profile.headwear,
+      shirt: state.profile.shirt,
+      pants: state.profile.pants,
+      shoes: state.profile.shoes,
+      backpack: state.profile.bag
+    };
+  }
+
+  function applyLocalAppearance() {
+    if (!player) return;
+    applyAppearanceToGroup(player, state.profile);
+    playerParts = player.userData.parts || playerParts;
+    if (state.online) send('appearance_update', { appearance: appearancePayload() });
   }
 
   function floor(group, width, depth, color = 0xbbe69a) {
@@ -367,6 +503,30 @@
     $('zone-label').textContent = `${labels[state.zone] || state.zone} · ${state.online ? 'Online' : 'Offline'}`;
   }
 
+  let threeLoadPromise = null;
+  function loadThree() {
+    if (window.THREE) return Promise.resolve(window.THREE);
+    if (threeLoadPromise) return threeLoadPromise;
+    threeLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => reject(new Error('The 3D engine took too long to load. Check your connection and retry.')), 20000);
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.onload = () => {
+        clearTimeout(timeout);
+        if (window.THREE) resolve(window.THREE);
+        else reject(new Error('The 3D engine loaded but did not initialise.'));
+      };
+      script.onerror = () => {
+        clearTimeout(timeout);
+        reject(new Error('Could not download the 3D engine.'));
+      };
+      document.head.appendChild(script);
+    });
+    return threeLoadPromise;
+  }
+
   async function createWorldAsync() {
     setBootStatus('Preparing the Waiting Plaza…');
     await nextFrame();
@@ -375,12 +535,11 @@
     scene.background = new THREE.Color(0x8cc8ef);
     camera = new THREE.PerspectiveCamera(55, Math.max(1, innerWidth) / Math.max(1, innerHeight), 0.1, 400);
 
-    renderer = new THREE.WebGLRenderer({
-      canvas: $('world'),
-      antialias: true,
-      alpha: false,
-      powerPreference: 'high-performance'
-    });
+    const canvas = $('world');
+    const contextOptions = { alpha: false, antialias: true, depth: true, stencil: false, preserveDrawingBuffer: false, powerPreference: 'default' };
+    const context = canvas.getContext('webgl2', contextOptions) || canvas.getContext('webgl', contextOptions);
+    if (!context) throw new Error('WebGL is unavailable on this device or browser.');
+    renderer = new THREE.WebGLRenderer({ canvas, context, antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(Math.max(1, innerWidth), Math.max(1, innerHeight), false);
     renderer.shadowMap.enabled = state.settings.shadows;
@@ -389,7 +548,7 @@
     scene.add(new THREE.HemisphereLight(0xffffff, 0x516b45, 1.35));
     const sun = new THREE.DirectionalLight(0xffffff, 1.05);
     sun.position.set(20, 35, 18);
-    sun.castShadow = true;
+    sun.castShadow = state.settings.shadows;
     sun.shadow.mapSize.set(1024, 1024);
     scene.add(sun);
 
@@ -424,12 +583,17 @@
 
     try {
       await wait(40);
-      if (!window.THREE) throw new Error('The 3D library is unavailable.');
+      setBootStatus('Loading the 3D engine…');
+      await loadThree();
+      await nextFrame();
       if (!scene) await createWorldAsync();
       else switchZone('plaza');
       updateMenu();
       setScreen('game');
       state.paused = false;
+      updatePlayer(0.016, performance.now());
+      renderer.render(scene, camera);
+      await nextFrame();
     } catch (error) {
       console.error('[Schoolyard Mobile] Startup failed:', error);
       setBootStatus(`Could not start the Waiting Plaza: ${error?.message || 'Unknown WebGL error'}`, true);
@@ -550,10 +714,14 @@
     $('map-button').addEventListener('click', () => openPanel('map-panel'));
     $('settings-button').addEventListener('click', () => openPanel('settings-panel'));
     $('profile-button').addEventListener('click', () => {
-      disconnect(false);
-      document.querySelectorAll('.takeover').forEach((panel) => { panel.hidden = true; });
-      state.paused = false;
-      setScreen('setup');
+      buildCharacterEditor();
+      openPanel('character-panel');
+    });
+    $('character-save-button').addEventListener('click', () => {
+      saveProfile();
+      applyLocalAppearance();
+      updateMenu();
+      closePanel('character-panel');
     });
 
     document.querySelectorAll('[data-zone]').forEach((button) => {
@@ -749,7 +917,7 @@
   }
 
   function updateMenu() {
-    $('menu-avatar').textContent = state.profile.gender === 'female' ? '👧' : '👦';
+    render2DPreview();
     $('menu-name').textContent = state.profile.name;
     $('menu-level').textContent = `Year ${state.profile.year} · New Student`;
     $('stat-boxes').textContent = state.stats.boxes;
@@ -823,7 +991,7 @@
       setOnlineStatus('Connected. Other players can now appear.');
       send('join', {
         name: state.profile.name,
-        appearance: { gender: state.profile.gender, shirt: state.profile.shirt },
+        appearance: appearancePayload(),
         profile: { achievementLevel: 1, achievementTitle: 'New Student' },
         state: {
           x: player.position.x,
@@ -911,7 +1079,12 @@
       const profile = {
         name: payload.name || 'Student',
         gender: payload.appearance?.gender || 'female',
-        shirt: payload.appearance?.shirt || 0x78b1de
+        skin: payload.appearance?.skin || skinColors[1],
+        headwear: payload.appearance?.headwear || (payload.appearance?.gender === 'male' ? headwearColors[6] : headwearColors[0]),
+        shirt: payload.appearance?.shirt || shirtColors[0],
+        pants: payload.appearance?.pants || pantsColors[1],
+        shoes: payload.appearance?.shoes || shoeColors[4],
+        bag: payload.appearance?.backpack || payload.appearance?.bag || bagColors[1]
       };
       remote = {
         group: makeCharacter(profile, true),
@@ -921,6 +1094,7 @@
       scene.add(remote.group);
       state.remotePlayers.set(id, remote);
     }
+    if (payload.appearance) applyAppearanceToGroup(remote.group, { ...payload.appearance, gender: payload.appearance.gender || 'female' });
     const remoteState = payload.state || payload;
     if (Number.isFinite(Number(remoteState.x))) {
       remote.target.set(Number(remoteState.x), Number(remoteState.y) || 0, Number(remoteState.z) || 0);
@@ -979,14 +1153,12 @@
     setupProfileUI();
     $('server-url').value = localStorage.getItem(ENDPOINT_KEY) || config.websocketUrl || '';
     $('server-room').value = localStorage.getItem(ROOM_KEY) || config.defaultRoom || 'schoolyard-main';
+    $('shadow-toggle').checked = state.settings.shadows;
+    $('traffic-toggle').checked = state.settings.traffic;
+    buildCharacterEditor();
     $('boot-retry').onclick = () => location.reload();
 
-    if (!window.THREE) {
-      setBootStatus('The 3D library did not load. Check the internet connection and reload.', true);
-      return;
-    }
-
-    setBootStatus('Ready. Opening Adventure Setup…');
+    setBootStatus('Ready. Opening lightweight Adventure Setup…');
     setTimeout(() => setScreen('setup'), 80);
 
     if ('serviceWorker' in navigator) {

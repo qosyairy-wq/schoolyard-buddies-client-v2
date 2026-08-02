@@ -1,4 +1,4 @@
-const CACHE='schoolyard-buddies-rebuild-1.0.2';
+const CACHE='schoolyard-buddies-rebuild-1.0.3';
 const LOCAL=['/','/index.html','/mobile.html','/mobile.css','/mobile.js','/config.js','/manifest.webmanifest','/assets/schoolyard-logo.png','/icons/icon-192.png','/icons/icon-512.png','/icons/apple-touch-icon.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(LOCAL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

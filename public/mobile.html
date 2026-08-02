@@ -8,13 +8,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="/mobile.css?v=1.0.2">
+  <link rel="stylesheet" href="/mobile.css?v=1.0.3">
   <title>Schoolyard Buddies Mobile</title>
 </head>
 <body>
   <div id="boot" class="screen boot-screen">
     <img src="/assets/schoolyard-logo.png" alt="Schoolyard Buddies">
-    <h1>Mobile Campus</h1><small class="build-badge">Build 1.0.2</small>
+    <h1>Mobile Campus</h1><small class="build-badge">Build 1.0.3</small>
     <p id="boot-status">Loading the lightweight game engine…</p>
     <div class="loader"><i></i></div>
     <button id="boot-retry" class="button gold" hidden>Retry</button>
@@ -23,12 +23,15 @@
   <section id="setup" class="screen setup-screen" hidden>
     <div class="setup-card">
       <header><img src="/assets/schoolyard-logo.png" alt=""><div><h1>Adventure Setup</h1><p>Choose a profile before entering the Waiting Plaza.</p></div></header>
-      <div class="avatar-preview" id="setup-avatar"><span>👧</span></div>
+      <div class="avatar-preview" id="setup-avatar">
+        <img id="setup-avatar-image" alt="2D character preview">
+        <small>Lightweight 2D preview</small>
+      </div>
       <div class="segmented"><button data-gender="female" class="selected">♀ Female · Alisha</button><button data-gender="male">♂ Male · Adam</button></div>
       <label>Player name<input id="player-name" maxlength="24" autocomplete="nickname" placeholder="Enter player name"></label>
       <label>Date of birth<input id="player-dob" type="date"></label>
       <div class="level-card"><b id="player-year">Enter date of birth</b><span id="player-age">The learning year will be selected automatically.</span></div>
-      <fieldset><legend>Starter colour</legend><div id="shirt-colours" class="swatches"></div></fieldset>
+      <p class="setup-note">Character colours can be edited later from the in-game menu.</p>
       <button id="enter-plaza" class="button gold" type="button">Enter Waiting Plaza</button>
       <a class="desktop-link" href="/desktop.html?manual=1">Open full desktop version</a>
     </div>
@@ -49,7 +52,7 @@
   <section id="menu" class="takeover" hidden>
     <header><div><h2>🎒 Schoolyard Menu</h2><p>Game paused</p></div><button class="close-button" data-close="menu">×</button></header>
     <div class="menu-scroll">
-      <article class="profile-card"><div class="profile-icon" id="menu-avatar">👧</div><div><h3 id="menu-name">Player</h3><p id="menu-level">Level 1 · New Student</p></div></article>
+      <article class="profile-card"><div class="profile-icon"><img id="menu-avatar-image" alt="Character"></div><div><h3 id="menu-name">Player</h3><p id="menu-level">Level 1 · New Student</p></div></article>
       <div class="stats"><div>⭐<b id="stat-boxes">0</b><small>Buddy Boxes</small></div><div>✦<b id="stat-stars">0</b><small>Fragments</small></div><div>🪙<b id="stat-coins">0</b><small>Coins</small></div></div>
       <article class="quest"><small>Current Quest</small><h3 id="quest-title">Welcome to the Waiting Plaza</h3><p id="quest-text">Explore locally, or connect to the online server when ready.</p></article>
       <div class="menu-grid">
@@ -58,9 +61,24 @@
         <button id="quiz-button">📘<span>Practice Quiz</span></button>
         <button id="map-button">🗺️<span>Map / Travel</span></button>
         <button id="settings-button">⚙️<span>Settings</span></button>
-        <button id="profile-button">👤<span>Change Profile</span></button>
+        <button id="profile-button">🎨<span>Edit Character</span></button>
       </div>
       <button id="resume-button" class="button gold">Resume Game</button>
+    </div>
+  </section>
+
+
+  <section id="character-panel" class="takeover" hidden>
+    <header><div><h2>🎨 Edit Character</h2><p>Game paused · Changes are saved automatically.</p></div><button class="close-button" data-close="character-panel">×</button></header>
+    <div class="panel-body character-editor">
+      <div class="character-preview-card"><img id="character-preview-image" alt="2D character preview"><div><h3 id="character-preview-name">Student</h3><p>2D preview · no extra 3D renderer</p></div></div>
+      <fieldset><legend>Skin tone</legend><div id="edit-skin" class="swatches editor-swatches"></div></fieldset>
+      <fieldset><legend id="headwear-legend">Hijab colour</legend><div id="edit-headwear" class="swatches editor-swatches"></div></fieldset>
+      <fieldset><legend>Shirt colour</legend><div id="edit-shirt" class="swatches editor-swatches"></div></fieldset>
+      <fieldset><legend>Trouser colour</legend><div id="edit-pants" class="swatches editor-swatches"></div></fieldset>
+      <fieldset><legend>Shoe colour</legend><div id="edit-shoes" class="swatches editor-swatches"></div></fieldset>
+      <fieldset><legend>Bag colour</legend><div id="edit-bag" class="swatches editor-swatches"></div></fieldset>
+      <button id="character-save-button" class="button gold">Save &amp; Return</button>
     </div>
   </section>
 
@@ -101,8 +119,7 @@
     </div>
   </section>
 
-  <script src="/config.js?v=1.0.2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
-  <script src="/mobile.js?v=1.0.2" defer></script>
+  <script src="/config.js?v=1.0.3"></script>
+  <script src="/mobile.js?v=1.0.3" defer></script>
 </body>
 </html>
