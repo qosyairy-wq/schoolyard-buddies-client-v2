@@ -1,0 +1,12 @@
+{
+  "name": "schoolyard-buddies-mobile-compatibility-v2",
+  "version": "2.1.4",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.115.0"
+  }
+}

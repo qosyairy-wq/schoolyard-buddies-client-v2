@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Schoolyard Multiplayer Test</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#0a315d;background:#eaf7ff}
+    *{box-sizing:border-box}body{margin:0;padding:20px}main{max-width:760px;margin:auto;background:#fff;border:3px solid #0a315d;border-radius:20px;padding:20px;box-shadow:0 6px 0 #b9dded}
+    input,button{font:inherit;padding:12px;border:2px solid #0a315d;border-radius:10px}input{width:100%;margin:6px 0 12px}button{background:#1677d4;color:#fff;font-weight:800;margin:4px 3px 4px 0}button.secondary{background:#fff;color:#0a315d}button:disabled{opacity:.55}.status{padding:12px;border-radius:12px;background:#e8f5ff;border:2px solid #67c9f2;font-weight:800;margin:12px 0}.log{height:300px;overflow:auto;background:#082f5d;color:#fff;padding:12px;border-radius:12px;white-space:pre-wrap;word-break:break-word}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Multiplayer diagnostics</h1>
+  <p>Test the Worker health endpoint first, then open the WebSocket. This page does not load the 3D game.</p>
+  <label>WebSocket URL<input id="url" autocomplete="url"></label>
+  <label>Room<input id="room" value="schoolyard-main" maxlength="48"></label>
+  <div>
+    <button id="health" type="button">1. Test health</button>
+    <button id="connect" type="button">2. Connect WebSocket</button>
+    <button id="send" type="button">Send test chat</button>
+    <button id="disconnect" type="button" class="secondary">Disconnect</button>
+  </div>
+  <div id="status" class="status">Ready</div>
+  <pre class="log" id="log"></pre>
+</main>
+<script src="/config.js?v=1.0.2"></script>
+<script>
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id);
+  let ws=null;
+  let timer=0;
+  const write=value=>{const log=$('log');log.textContent+=`${new Date().toLocaleTimeString()}  ${value}\n`;log.scrollTop=log.scrollHeight;};
+  const status=value=>{$('status').textContent=value;};
+  const normalize=()=>{const raw=$('url').value.trim();if(!/^wss?:\/\//i.test(raw))throw new Error('Enter a valid wss:// URL');const u=new URL(raw);if(!/\/ws\/?$/i.test(u.pathname))u.pathname=u.pathname.replace(/\/$/,'')+'/ws';u.searchParams.set('room',$('room').value.trim()||'schoolyard-main');return u;};
+  const healthUrl=()=>{const u=normalize();u.protocol=u.protocol==='wss:'?'https:':'http:';u.pathname='/health';u.search='';return u;};
+  const cleanup=()=>{if(timer)clearTimeout(timer);timer=0;$('connect').disabled=false;};
+  $('url').value=window.SYB_CONFIG?.websocketUrl||'';
+  $('health').onclick=async()=>{try{status('Testing backend health…');const u=healthUrl();write(`GET ${u}`);const controller=new AbortController();const abort=setTimeout(()=>controller.abort(),8000);const response=await fetch(u,{cache:'no-store',signal:controller.signal});clearTimeout(abort);const text=await response.text();write(`HEALTH ${response.status} ${text}`);status(response.ok?'Health endpoint OK':'Health endpoint returned an error');}catch(error){write(`HEALTH ERROR ${error.message}`);status('Health test failed');}};
+  $('connect').onclick=()=>{try{if(ws&&ws.readyState<=1)return;const u=normalize();status('Opening WebSocket…');write(`CONNECT ${u}`);$('connect').disabled=true;ws=new WebSocket(u);timer=setTimeout(()=>{if(ws&&ws.readyState!==WebSocket.OPEN){write('TIMEOUT after 12 seconds');status('WebSocket timeout');try{ws.close(4000,'timeout')}catch(_){}}},12000);ws.onopen=()=>{cleanup();status('WebSocket connected');write('OPEN');ws.send(JSON.stringify({type:'join',payload:{name:'Browser Test',appearance:{gender:'female',shirt:7909854},profile:{achievementLevel:1,achievementTitle:'Test Student'},state:{x:0,y:0,z:0,zone:'plaza'},clientVersion:'diagnostics-1.0.2'}}));};ws.onmessage=event=>write(`MESSAGE ${event.data}`);ws.onerror=()=>{write('ERROR event');status('WebSocket error');};ws.onclose=event=>{cleanup();write(`CLOSE ${event.code} ${event.reason||''}`);status('WebSocket closed');ws=null;};}catch(error){cleanup();write(`CONNECT ERROR ${error.message}`);status('Invalid connection settings');}};
+  $('send').onclick=()=>{if(!ws||ws.readyState!==WebSocket.OPEN){write('Cannot send: WebSocket is not open');return;}ws.send(JSON.stringify({type:'chat',payload:{text:'Hello from multiplayer-test.html'}}));write('SENT test chat');};
+  $('disconnect').onclick=()=>{if(ws){try{ws.send(JSON.stringify({type:'leave',payload:{}}));ws.close(1000,'manual disconnect')}catch(_){}}};
+})();
+</script>
+</body>
+</html>

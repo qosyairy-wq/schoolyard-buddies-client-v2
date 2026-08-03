@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#0f66bd">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <title>Schoolyard Buddies</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#8fc7f4;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+    body{display:grid;place-items:center;color:#173a5e;text-align:center;padding:24px;box-sizing:border-box}
+    .loading{font-weight:900;font-size:clamp(18px,4vw,28px)}
+  </style>
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      params.set('mobile', '1');
+      params.set('source', params.get('source') || 'mobile-route');
+      params.set('v', '2.1.4');
+      location.replace('/mobile-game.html?' + params.toString());
+    })();
+  </script>
+</head>
+<body><div class="loading">Opening the full Schoolyard Buddies game…</div></body>
+</html>
