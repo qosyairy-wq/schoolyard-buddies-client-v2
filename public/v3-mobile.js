@@ -3,7 +3,7 @@
   'use strict';
   const isMobile = matchMedia('(hover:none) and (pointer:coarse), (max-width:1100px)').matches;
   if (!isMobile) return;
-  const BUILD = '3.0.0';
+  const BUILD = '3.0.2';
   document.documentElement.dataset.sybMobileBuild = BUILD;
 
   const $ = id => document.getElementById(id);
