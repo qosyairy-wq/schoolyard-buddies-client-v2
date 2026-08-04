@@ -3,7 +3,7 @@
   'use strict';
   const isMobile = matchMedia('(hover:none) and (pointer:coarse), (max-width:1100px)').matches;
   if (!isMobile) return;
-  const BUILD = '3.0.2';
+  const BUILD = '3.0.3';
   document.documentElement.dataset.sybMobileBuild = BUILD;
 
   const $ = id => document.getElementById(id);
@@ -114,9 +114,44 @@
   }
 
   let queued=false;
+  function ensureSetupScroll(){
+    const host=document.getElementById('nintendo-exact-skin-host');
+    if(host){
+      host.style.overflowY='auto';
+      host.style.overflowX='hidden';
+      host.style.webkitOverflowScrolling='touch';
+      host.style.touchAction='pan-y';
+    }
+    const root=window.SchoolyardExactSetupSkin?.shadow||host?.shadowRoot;
+    if(!root||root.getElementById('syb-v3-mobile-scroll-fix'))return;
+    const style=document.createElement('style');
+    style.id='syb-v3-mobile-scroll-fix';
+    style.textContent=`
+      :host{display:block!important;width:100%!important;height:100dvh!important;overflow:auto!important;overscroll-behavior-y:contain!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important}
+      .syb-skin-root{position:relative!important;width:100%!important;height:100dvh!important;min-height:100dvh!important;overflow-y:auto!important;overflow-x:hidden!important;align-items:flex-start!important;justify-content:flex-start!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important;padding-bottom:max(28px,env(safe-area-inset-bottom))!important}
+      .app{flex:0 0 auto!important;height:auto!important;min-height:0!important;overflow:visible!important;margin:0 auto!important}
+      @media(max-width:1100px){
+        .layout{grid-template-columns:1fr!important;min-width:0!important}
+        .left,.right{min-width:0!important}
+        .preview{min-height:390px!important}
+      }
+      @media(max-width:700px){
+        .syb-skin-root{padding:6px 6px max(30px,env(safe-area-inset-bottom))!important}
+        .app{width:100%!important;border-radius:18px!important;padding:7px!important}
+        .header{padding:9px 10px!important;min-height:70px!important}
+        .back{min-width:108px!important;height:48px!important;font-size:16px!important}
+        .layout{padding:9px 5px 18px!important;gap:10px!important}
+        .preview{min-height:340px!important}
+        .gender-row{grid-template-columns:1fr!important}
+        .mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+      }
+    `;
+    root.appendChild(style);
+  }
+
   function sync() {
     if(queued)return; queued=true;
-    requestAnimationFrame(()=>{queued=false;resizeRenderer();buildMenu();bindMenu();bindJoystick();syncModalState();});
+    requestAnimationFrame(()=>{queued=false;resizeRenderer();ensureSetupScroll();buildMenu();bindMenu();bindJoystick();syncModalState();});
   }
   addEventListener('resize',sync,{passive:true});
   addEventListener('orientationchange',()=>setTimeout(sync,120),{passive:true});

@@ -1,11 +1,14 @@
-/* Schoolyard Buddies v3.0.2 — universal fullscreen quiz-style UI */
+/* Schoolyard Buddies v3.0.3 — universal fullscreen quiz-style UI */
 :root {
   --syb-safe-top: env(safe-area-inset-top, 0px);
   --syb-safe-right: env(safe-area-inset-right, 0px);
   --syb-safe-bottom: env(safe-area-inset-bottom, 0px);
   --syb-safe-left: env(safe-area-inset-left, 0px);
 }
-html.syb-blocking-ui-open, body.syb-blocking-ui-open { overflow:hidden!important; overscroll-behavior:none!important; }
+html.syb-blocking-ui-open, body.syb-blocking-ui-open {
+  overflow:hidden!important;
+  overscroll-behavior:none!important;
+}
 body.syb-blocking-ui-open #canvas-container,
 body.syb-blocking-ui-open #hud,
 body.syb-blocking-ui-open #joystick-zone,
@@ -17,6 +20,7 @@ body.syb-blocking-ui-open #stage61-beacon {
   pointer-events:none!important;
 }
 
+/* Any blocking game panel receives this class from the shared controller. */
 .syb-fullscreen-active {
   position:fixed!important;
   inset:0!important;
@@ -44,7 +48,6 @@ body.syb-blocking-ui-open #stage61-beacon {
   visibility:visible!important;
   pointer-events:auto!important;
 }
-
 .syb-fullscreen-active > * { max-width:1180px; margin-left:auto; margin-right:auto; box-sizing:border-box; }
 .syb-fullscreen-active h1,
 .syb-fullscreen-active h2,
@@ -52,7 +55,6 @@ body.syb-blocking-ui-open #stage61-beacon {
 .syb-fullscreen-active .dialog-header,
 .syb-fullscreen-active .task-dialog-header {
   color:#ffd84a!important;
-  text-align:center!important;
   line-height:1.15!important;
 }
 .syb-fullscreen-active .dialog-text,
@@ -78,22 +80,69 @@ body.syb-blocking-ui-open #stage61-beacon {
   gap:16px!important;
 }
 .syb-fullscreen-active button,
-.syb-fullscreen-active .pixel-btn {
-  min-height:58px;
-  touch-action:manipulation!important;
-}
+.syb-fullscreen-active .pixel-btn { min-height:58px; touch-action:manipulation!important; }
 .syb-fullscreen-active .dialog-close-btn,
 .syb-fullscreen-active [data-close],
 .syb-fullscreen-active [aria-label*="close" i],
-.syb-fullscreen-active [id*="close" i] {
-  pointer-events:auto!important;
+.syb-fullscreen-active [id*="close" i] { pointer-events:auto!important; }
+
+/* Learning Centre: root and inner window both occupy the entire viewport. */
+#education-centre-screen.syb-fullscreen-active,
+#education-centre-screen:not(.hidden) {
+  position:fixed!important;
+  inset:0!important;
+  width:100dvw!important;
+  height:100dvh!important;
+  max-width:none!important;
+  max-height:none!important;
+  padding:0!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+  background:#071b35!important;
+  z-index:2147483000!important;
+}
+#education-centre-screen.syb-fullscreen-active .education-centre-window,
+#education-centre-screen:not(.hidden) .education-centre-window {
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+}
+#education-centre-screen .education-centre-titlebar {
+  flex:0 0 auto!important;
+  padding-top:max(14px,var(--syb-safe-top))!important;
+  padding-right:max(16px,var(--syb-safe-right))!important;
+  padding-left:max(16px,var(--syb-safe-left))!important;
+}
+#education-centre-screen .education-centre-scroll {
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  max-width:none!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  padding-bottom:max(20px,var(--syb-safe-bottom))!important;
 }
 
-/* Start/profile screens remain usable and scrollable, especially on Safari. */
-#start-screen, #character-setup-screen {
+/* Setup/profile screens must be scrollable. */
+#start-screen, #character-setup-screen, #nintendo-exact-skin-host {
   max-height:100vh!important;
   max-height:100dvh!important;
   overflow-y:auto!important;
+  overflow-x:hidden!important;
   overscroll-behavior-y:contain!important;
   -webkit-overflow-scrolling:touch!important;
   touch-action:pan-y!important;
@@ -107,4 +156,5 @@ body.syb-blocking-ui-open #stage61-beacon {
   .syb-fullscreen-active .task-options,
   .syb-fullscreen-active .quiz-options,
   .syb-fullscreen-active .question-options { grid-template-columns:1fr!important; }
+  #education-centre-screen.syb-fullscreen-active { padding:0!important; }
 }

@@ -1,4 +1,4 @@
-# Schoolyard Buddies v3.0.2
+# Schoolyard Buddies v3.0.3
 
 Universal fullscreen UI stabilization build.
 
@@ -6,6 +6,6 @@ Universal fullscreen UI stabilization build.
 - Gameplay canvas, HUD and controls are hidden and input is paused while a blocking panel is open.
 - Closing the panel restores the previous pause state and gameplay input.
 - Start/profile screens remain scrollable on iPhone, Android and desktop.
-- Cache and router build are fixed at 3.0.2.
+- Cache and router build are fixed at 3.0.3.
 
-Use `/health` to confirm the active deployment reports `3.0.2`.
+Use `/health` to confirm the active deployment reports `3.0.3`.
