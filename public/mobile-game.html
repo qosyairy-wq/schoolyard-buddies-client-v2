@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="ms">
-<head><script>/* SYB perf bootstrap (Fasa 1) */(function(){var m=false;try{m=matchMedia('(hover: none) and (pointer: coarse)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);}catch(e){}var r=window.devicePixelRatio||1;window.SYB_PERF={mobile:m,dpr:Math.min(r,m?1.5:2),previewDpr:Math.min(r,m?1:1.35),aa:!m,shadow:m?1024:2048,soft:!m};})();</script>
+<head><script>/* SYB perf bootstrap (Fasa 1) */(function(){var m=false;try{m=matchMedia('(hover: none) and (pointer: coarse)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);}catch(e){}var r=window.devicePixelRatio||1;window.SYB_PERF={mobile:m,dpr:Math.min(r,m?1.5:2),previewDpr:Math.min(r,m?1:1.35),aa:!m,shadow:m?1024:2048,soft:!m};})();</script><script>/* SYB perf Fasa 2: material factory */window.SYB_MAT=function(p){p=p||{};if(window.SYB_PERF&&window.SYB_PERF.mobile&&window.THREE&&THREE.MeshLambertMaterial){var q={},k;for(k in p){if(k==='roughness'||k==='metalness'||k==='flatShading')continue;q[k]=p[k];}var m=new THREE.MeshLambertMaterial(q);if(p.flatShading!==undefined)m.flatShading=p.flatShading;return m;}return new THREE.MeshStandardMaterial(p);};</script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title>Schoolyard City — Stage 4.0.5 Premium HUD Layout Polish</title>
@@ -12,8 +12,22 @@
         diagnostics, lifecycle events, compatibility guards, and subsystem registry.
   Build: 0.0.0-modular-foundation
 -->
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Noto+Naskh+Arabic:wght@500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Fredoka:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<style id="syb-static-utilities">/* Fasa 2: ganti Tailwind CDN (hanya utiliti yang digunakan) */
+*,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
+html{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5}
+body{margin:0;line-height:inherit}
+h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0}
+p,blockquote,figure,ol,ul,dl,dd{margin:0}ol,ul{list-style:none;padding:0}
+img,svg,video,canvas{display:block;vertical-align:middle;max-width:100%}img,video{height:auto}
+button,input,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}
+button,[type=button],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none;cursor:pointer}
+a{color:inherit;text-decoration:inherit}
+.hidden{display:none}.block{display:block}
+.font-bold{font-weight:700}.text-sm{font-size:.875rem;line-height:1.25rem}
+.text-gray-600{color:#4b5563}
+.p-2{padding:.5rem}.mb-1{margin-bottom:.25rem}.mt-4{margin-top:1rem}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Noto+Naskh+Arabic:wght@500;600;700&amp;family=Oxanium:wght@400;500;600;700;800&amp;family=Fredoka:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 <style>
@@ -8807,7 +8821,7 @@ body.syb-blocking-ui-open #hud > #world-map-screen:not(.hidden) {
         const materialCache = {};
         function getMat(hex, flat=true) {
             if (!materialCache[hex]) {
-                materialCache[hex] = new THREE.MeshStandardMaterial({ 
+                materialCache[hex] = window.SYB_MAT({ 
                     color: hex, roughness: 0.7, flatShading: flat 
                 });
             }
@@ -8915,7 +8929,7 @@ body.syb-blocking-ui-open #hud > #world-map-screen:not(.hidden) {
 
         function getStage119GrassMaterial() {
             if(stage119GrassMaterial) return stage119GrassMaterial;
-            stage119GrassMaterial = new THREE.MeshStandardMaterial({
+            stage119GrassMaterial = window.SYB_MAT({
                 color: 0xffffff,
                 map: createStage119GrassTexture(),
                 roughness: 0.82,
@@ -9722,7 +9736,7 @@ class ChibiCharacter {
             backPlate.position.set(0, 0, 0);
             const facePlate = new THREE.Mesh(
                 new THREE.BoxGeometry(style.faceWidth, style.faceHeight, 0.18),
-                new THREE.MeshStandardMaterial({
+                window.SYB_MAT({
                     map: createSignTexture(label, style.face, style.fg, shopKey),
                     roughness: 0.84
                 })
@@ -9756,7 +9770,7 @@ class ChibiCharacter {
         function createCloud(x, y, z, scale = 1, speed = 0.7, layer = 'lower') {
             const group = new THREE.Group();
             if(!skyCloudMaterial) {
-                skyCloudMaterial = new THREE.MeshStandardMaterial({
+                skyCloudMaterial = window.SYB_MAT({
                     color: 0xffffff,
                     roughness: 1,
                     metalness: 0,
@@ -10853,7 +10867,7 @@ class ChibiCharacter {
             top.position.y = 1.37;
             const screen = new THREE.Mesh(
                 new THREE.BoxGeometry(2.35, 1.15, .28),
-                new THREE.MeshStandardMaterial({ map:createSignTexture(`${centre.icon} GUIDE`, centre.theme?.signBg || '#fff8d6', centre.theme?.signFg || '#27496b', 'school'), roughness:.82 })
+                window.SYB_MAT({ map:createSignTexture(`${centre.icon} GUIDE`, centre.theme?.signBg || '#fff8d6', centre.theme?.signFg || '#27496b', 'school'), roughness:.82 })
             );
             screen.position.set(0, 2.15, .72);
             const light = new THREE.Mesh(new THREE.BoxGeometry(.65,.65,.65), getMat(centre.theme?.roof || 0x4d8ed8));
@@ -11148,7 +11162,7 @@ class ChibiCharacter {
                 const signWidth = Math.min(w - 4, 10.6);
                 const backBoard = new THREE.Mesh(new THREE.BoxGeometry(signWidth + 0.6, 2.25, 0.26), getMat(signBack || style.back));
                 backBoard.position.set(x, h * 0.88, z + d / 2 + 0.54);
-                const signMesh = new THREE.Mesh(new THREE.BoxGeometry(signWidth, 1.78, 0.18), new THREE.MeshStandardMaterial({ map: createSignTexture(sign, signBg, signFg, logoKey), roughness: 0.8 }));
+                const signMesh = new THREE.Mesh(new THREE.BoxGeometry(signWidth, 1.78, 0.18), window.SYB_MAT({ map: createSignTexture(sign, signBg, signFg, logoKey), roughness: 0.8 }));
                 signMesh.position.set(x, h * 0.88, z + d / 2 + 0.74);
                 const topTrim = new THREE.Mesh(new THREE.BoxGeometry(signWidth + 0.9, 0.24, 0.22), getMat(signTop || style.top));
                 topTrim.position.set(x, h * 0.88 + 1.18, z + d / 2 + 0.6);
@@ -11204,7 +11218,7 @@ class ChibiCharacter {
             const compact=!!game.compact;
             const group=new THREE.Group(); group.position.set(x,0,z);
             const base=new THREE.Mesh(new THREE.BoxGeometry(compact?2.1:3.4,compact?1.35:2.2,compact?1.8:3.0),getMat(game.bookshop?0x496b98:0x355575)); base.position.y=compact?.68:1.1;
-            const screen=new THREE.Mesh(new THREE.BoxGeometry(compact?1.75:2.7,compact?1.05:1.6,0.3),new THREE.MeshStandardMaterial({map:createSignTexture(game.icon+' '+game.name,game.bookshop?'#f4fbff':'#fff8d6','#27496b','bookshop'),roughness:.75})); screen.position.set(0,compact?1.78:3.0,compact?.78:1.25);
+            const screen=new THREE.Mesh(new THREE.BoxGeometry(compact?1.75:2.7,compact?1.05:1.6,0.3),window.SYB_MAT({map:createSignTexture(game.icon+' '+game.name,game.bookshop?'#f4fbff':'#fff8d6','#27496b','bookshop'),roughness:.75})); screen.position.set(0,compact?1.78:3.0,compact?.78:1.25);
             const top=new THREE.Mesh(new THREE.BoxGeometry(compact?2.35:3.8,.35,compact?2.05:3.4),getMat(game.bookshop?0xa7ea82:0xf2c94c)); top.position.y=compact?1.46:2.35;
             [base,screen,top].forEach(m=>{m.castShadow=true;m.receiveShadow=true;group.add(m);});
             scene.add(group);
@@ -12515,19 +12529,19 @@ class ChibiCharacter {
             
             
             const M = {
-              concrete: new THREE.MeshStandardMaterial({ map:tex.concrete, color:0xb6afb1, roughness:.82 }),
-              trim: new THREE.MeshStandardMaterial({ color:0x82797c, roughness:.75 }),
-              dark: new THREE.MeshStandardMaterial({ color:0x1e252c, roughness:.65, metalness:.35 }),
-              black: new THREE.MeshStandardMaterial({ color:0x11161b, roughness:.55, metalness:.45 }),
+              concrete: window.SYB_MAT({ map:tex.concrete, color:0xb6afb1, roughness:.82 }),
+              trim: window.SYB_MAT({ color:0x82797c, roughness:.75 }),
+              dark: window.SYB_MAT({ color:0x1e252c, roughness:.65, metalness:.35 }),
+              black: window.SYB_MAT({ color:0x11161b, roughness:.55, metalness:.45 }),
             
               // Brighter candy accents while retaining the original material response.
-              blue: new THREE.MeshStandardMaterial({ color:0x168fe8, roughness:.46, metalness:.12 }),
-              cyan: new THREE.MeshStandardMaterial({ color:0x1ef4f1, emissive:0x00b8c5, emissiveIntensity:1.18, roughness:.32 }),
-              orange: new THREE.MeshStandardMaterial({ color:0xff9c35, roughness:.52 }),
-              red: new THREE.MeshStandardMaterial({ color:0xff4f78, roughness:.49 }),
-              white: new THREE.MeshStandardMaterial({ color:0xfffbf1, roughness:.52 }),
-              green: new THREE.MeshStandardMaterial({ color:0x25c95b, roughness:.68 }),
-              leaf: new THREE.MeshStandardMaterial({ color:0x39da61, roughness:.70 }),
+              blue: window.SYB_MAT({ color:0x168fe8, roughness:.46, metalness:.12 }),
+              cyan: window.SYB_MAT({ color:0x1ef4f1, emissive:0x00b8c5, emissiveIntensity:1.18, roughness:.32 }),
+              orange: window.SYB_MAT({ color:0xff9c35, roughness:.52 }),
+              red: window.SYB_MAT({ color:0xff4f78, roughness:.49 }),
+              white: window.SYB_MAT({ color:0xfffbf1, roughness:.52 }),
+              green: window.SYB_MAT({ color:0x25c95b, roughness:.68 }),
+              leaf: window.SYB_MAT({ color:0x39da61, roughness:.70 }),
             
               glass: new THREE.MeshPhysicalMaterial({
                 color:0x4b91aa, roughness:.14, metalness:.08, transmission:.24,
@@ -12555,8 +12569,8 @@ class ChibiCharacter {
                 clearcoat:.55, clearcoatRoughness:.26
               }),
             
-              grass: new THREE.MeshStandardMaterial({ map:tex.grass, roughness:.90 }),
-              field: new THREE.MeshStandardMaterial({ map:tex.field, roughness:.90 }),
+              grass: window.SYB_MAT({ map:tex.grass, roughness:.90 }),
+              field: window.SYB_MAT({ map:tex.field, roughness:.90 }),
               rubber: new THREE.MeshPhysicalMaterial({
                 map:tex.rubber, roughness:.58, metalness:.05,
                 clearcoat:.38, clearcoatRoughness:.35
@@ -12570,7 +12584,7 @@ class ChibiCharacter {
             
             
             function brickMat(color){
-              return new THREE.MeshStandardMaterial({ map:tex.brick, color, roughness:.72, metalness:.025 });
+              return window.SYB_MAT({ map:tex.brick, color, roughness:.72, metalness:.025 });
             }
             function box(size, pos, mat, parent=scene, opts={}){
               const m = new THREE.Mesh(new THREE.BoxGeometry(size[0],size[1],size[2]), mat);
@@ -12602,7 +12616,7 @@ class ChibiCharacter {
                 iconBg:opts.iconBg||colors.border||colors.bg,
                 iconFg:opts.iconFg||'#ffffff'
               });
-              const mat = new THREE.MeshStandardMaterial({
+              const mat = window.SYB_MAT({
                 map:texture,
                 emissiveMap:texture,
                 emissive: colors.emissive || new THREE.Color(colors.fg),
@@ -12621,7 +12635,7 @@ class ChibiCharacter {
             const ROAD_Z = [-50,-17,18,52];
             
             box([180,1.0,148],[0,-0.52,0],
-              new THREE.MeshStandardMaterial({color:0x59606a,roughness:.78}),
+              window.SYB_MAT({color:0x59606a,roughness:.78}),
               scene,{cast:false});
             plane([180,148],[0,0,0],M.grass);
             
@@ -12654,7 +12668,7 @@ class ChibiCharacter {
             ROAD_X.forEach(x=>roadV(x));
             
             // Dashed centre lines.
-            const lineMat = new THREE.MeshStandardMaterial({color:0xd0d5da,roughness:.52});
+            const lineMat = window.SYB_MAT({color:0xd0d5da,roughness:.52});
             for(const z of ROAD_Z){
               for(let x=-84;x<=84;x+=6.5) box([3.2,.02,.11],[x,.105,z],lineMat,scene,{cast:false});
             }
@@ -12976,9 +12990,9 @@ class ChibiCharacter {
               g.position.set(x,0,z);
               g.scale.setScalar(s);
               scene.add(g);
-              box([.55,2.1,.55],[0,1.05,0],new THREE.MeshStandardMaterial({color:0x805232,roughness:.9}),g);
-              box([2.0,1.0,2.0],[0,2.4,0],new THREE.MeshStandardMaterial({color:0x4ab85e,roughness:.82}),g);
-              box([1.4,.9,1.4],[0,3.0,0],new THREE.MeshStandardMaterial({color:0x64ca74,roughness:.82}),g);
+              box([.55,2.1,.55],[0,1.05,0],window.SYB_MAT({color:0x805232,roughness:.9}),g);
+              box([2.0,1.0,2.0],[0,2.4,0],window.SYB_MAT({color:0x4ab85e,roughness:.82}),g);
+              box([1.4,.9,1.4],[0,3.0,0],window.SYB_MAT({color:0x64ca74,roughness:.82}),g);
               registerStage12StaticCollider(x,z,.72*s,.72*s,2.5*s,0,'tree-trunk');
             }
             
@@ -12987,7 +13001,7 @@ class ChibiCharacter {
               g.position.set(x,.14,z);
               g.rotation.y = rot;
               scene.add(g);
-              const wood = new THREE.MeshStandardMaterial({ color:0x9b6a40, roughness:.86 });
+              const wood = window.SYB_MAT({ color:0x9b6a40, roughness:.86 });
               box([1.9,.18,.42],[0,.9,0],wood,g); box([1.9,.18,.42],[0,1.28,-.18],wood,g);
               for(const px of [-.72,.72]){ box([.16,.9,.16],[px,.45,0],M.dark,g); box([.16,.9,.16],[px,.45,-.18],M.dark,g); }
               // Solid footprint follows the actual rotated bench, including the back rest.
@@ -13086,13 +13100,13 @@ class ChibiCharacter {
               slide.position.set(-4.5,0,-.7);
               playground.add(slide);
             
-              const slideRed=new THREE.MeshStandardMaterial({
+              const slideRed=window.SYB_MAT({
                 color:0xff5d75,roughness:.48,metalness:.03
               });
-              const slideYellow=new THREE.MeshStandardMaterial({
+              const slideYellow=window.SYB_MAT({
                 color:0xffcf3f,roughness:.54
               });
-              const slideBlue=new THREE.MeshStandardMaterial({
+              const slideBlue=window.SYB_MAT({
                 color:0x39aeea,roughness:.50
               });
             
@@ -13192,13 +13206,13 @@ class ChibiCharacter {
               swingFrame.position.set(4.4,0,-1.0);
               playground.add(swingFrame);
             
-              const swingFrameMat=new THREE.MeshStandardMaterial({
+              const swingFrameMat=window.SYB_MAT({
                 color:0x253e66,roughness:.60,metalness:.24
               });
-              const swingSeatMat=new THREE.MeshStandardMaterial({
+              const swingSeatMat=window.SYB_MAT({
                 color:0xff8d45,roughness:.58
               });
-              const chainMat=new THREE.MeshStandardMaterial({
+              const chainMat=window.SYB_MAT({
                 color:0xeef6ff,roughness:.35,metalness:.55
               });
             
@@ -13274,13 +13288,13 @@ class ChibiCharacter {
               const spinner=new THREE.Group();
               roundaboutBase.add(spinner);
             
-              const diskMat=new THREE.MeshStandardMaterial({
+              const diskMat=window.SYB_MAT({
                 color:0x8f6be8,roughness:.48,metalness:.08
               });
-              const rimMat=new THREE.MeshStandardMaterial({
+              const rimMat=window.SYB_MAT({
                 color:0xffca45,roughness:.50
               });
-              const handleMat=new THREE.MeshStandardMaterial({
+              const handleMat=window.SYB_MAT({
                 color:0x36b7dc,roughness:.48,metalness:.16
               });
             
@@ -13352,7 +13366,7 @@ class ChibiCharacter {
                 box([3.6,.12,.12],[0,1.7,0],M.white,g);
                 box([.12,1.7,.12],[-1.8,.85,0],M.white,g);
                 box([.12,1.7,.12],[1.8,.85,0],M.white,g);
-                box([3.6,.12,1.4],[0,1.7,-.65],new THREE.MeshStandardMaterial({color:0xffffff, transparent:true, opacity:.25}),g);
+                box([3.6,.12,1.4],[0,1.7,-.65],window.SYB_MAT({color:0xffffff, transparent:true, opacity:.25}),g);
               }
               goal(x, z-d/2+1.8, 0);
               goal(x, z+d/2-1.8, Math.PI);
@@ -13404,7 +13418,7 @@ class ChibiCharacter {
             
             function centralPlazaLot(x,z,w,d){
               lotBase(x,z,w,d,'building');
-              const baseMat=new THREE.MeshStandardMaterial({color:0xd7c2df,roughness:.45,metalness:.08});
+              const baseMat=window.SYB_MAT({color:0xd7c2df,roughness:.45,metalness:.08});
               cyl(3.5,.45,[x,.48,z],baseMat,scene,24);
               cyl(2.45,.30,[x,.76,z],M.water,scene,28);
               cyl(.48,3.0,[x,1.55,z],M.concrete,scene,12);
@@ -13430,11 +13444,11 @@ class ChibiCharacter {
                   const px=x+col*2.2+(row%2)*.7;
                   const pz=z+row*2.8;
                   box([1.45,.32,1.45],[px,.42,pz],
-                    new THREE.MeshStandardMaterial({color:0x2f9d50,roughness:.80}),scene);
+                    window.SYB_MAT({color:0x2f9d50,roughness:.80}),scene);
                   for(let f=0;f<4;f++){
                     box([.25,.36,.25],
                       [px+(f%2)*.42-.20,.78,pz+Math.floor(f/2)*.42-.20],
-                      new THREE.MeshStandardMaterial({color:flowerColors[(row+col+f+20)%flowerColors.length],roughness:.55}),
+                      window.SYB_MAT({color:flowerColors[(row+col+f+20)%flowerColors.length],roughness:.55}),
                       scene);
                   }
                 }
@@ -13449,14 +13463,14 @@ class ChibiCharacter {
             
             function readingParkLot(x,z,w,d){
               lotBase(x,z,w,d,'field');
-              const roofMat=new THREE.MeshStandardMaterial({color:0xa77aff,roughness:.56});
+              const roofMat=window.SYB_MAT({color:0xa77aff,roughness:.56});
               box([9.5,.35,5.2],[x,3.25,z],roofMat,scene);
               for(const [ox,oz] of [[-4,-2],[4,-2],[-4,2],[4,2]]) {
                 box([.28,3.0,.28],[x+ox,1.65,z+oz],M.dark,scene);
                 registerStage12StaticCollider(x+ox,z+oz,.42,.42,3.2,0,'reading-park-post');
               }
               for(const ox of [-3.2,0,3.2]){
-                box([2.2,1.5,.42],[x+ox,1.05,z-1.6],new THREE.MeshStandardMaterial({color:0x9b6a40,roughness:.83}),scene);
+                box([2.2,1.5,.42],[x+ox,1.05,z-1.6],window.SYB_MAT({color:0x9b6a40,roughness:.83}),scene);
                 for(let shelf=.55;shelf<=1.5;shelf+=.45) box([2.0,.10,.48],[x+ox,shelf,z-1.6],M.concrete,scene);
                 registerStage12StaticCollider(x+ox,z-1.6,2.28,.62,1.9,0,'reading-park-shelf');
               }
@@ -13476,7 +13490,7 @@ class ChibiCharacter {
               scene.add(lake);
             
               // Boardwalk and small bridge.
-              const wood=new THREE.MeshStandardMaterial({color:0xa36d43,roughness:.80});
+              const wood=window.SYB_MAT({color:0xa36d43,roughness:.80});
               for(let i=-5;i<=5;i++) box([.85,.14,3.0],[x+i*.82,.48,z+d*.22],wood,scene);
               box([w*.45,.18,1.05],[x,.50,z+d*.22],M.dark,scene);
               for(const side of [-1,1]){
@@ -13823,7 +13837,7 @@ class ChibiCharacter {
               box([arm,.12,.12],[arm/2,h-.10,0],M.dark,g);
               box([.55,.26,.34],[arm-.12,h-.29,0],M.dark,g);
               box([.38,.06,.25],[arm-.12,h-.45,0],
-                new THREE.MeshStandardMaterial({
+                window.SYB_MAT({
                   color:0xb4f6ff,emissive:0x66dfff,emissiveIntensity:1.30
                 }),g);
               const point=new THREE.PointLight(0x8befff,1.65,10.5,2);
@@ -13862,8 +13876,8 @@ class ChibiCharacter {
               car.position.set(x,.38,z);
               car.rotation.y=rot;
               scene.add(car);
-              const body1=new THREE.MeshStandardMaterial({color,roughness:.42,metalness:.32});
-              const body2=new THREE.MeshStandardMaterial({
+              const body1=window.SYB_MAT({color,roughness:.42,metalness:.32});
+              const body2=window.SYB_MAT({
                 color:new THREE.Color(color).offsetHSL(0,0,.06),roughness:.38,metalness:.32
               });
               box([4.2,.70,1.75],[0,.62,0],body1,car);
@@ -13878,10 +13892,10 @@ class ChibiCharacter {
                   cyl(.19,.27,[xx,.46,zz],M.trim,car,12,[Math.PI/2,0,0]);
                 }
               }
-              const tail=new THREE.MeshStandardMaterial({
+              const tail=window.SYB_MAT({
                 color:0xff2638,emissive:0xff1828,emissiveIntensity:1.65
               });
-              const head=new THREE.MeshStandardMaterial({
+              const head=window.SYB_MAT({
                 color:0xf8f6d0,emissive:0xffef9b,emissiveIntensity:1.5
               });
               box([.16,.34,.38],[-2.13,.82,-.52],tail,car);
@@ -13918,9 +13932,9 @@ class ChibiCharacter {
               bus.rotation.y=rot;
               scene.add(bus);
 
-              const bodyMat=new THREE.MeshStandardMaterial({color,roughness:.48,metalness:.16});
-              const roofMat=new THREE.MeshStandardMaterial({color:0xf5f2df,roughness:.55,metalness:.08});
-              const trimMat=new THREE.MeshStandardMaterial({color:0xffd44c,roughness:.48,metalness:.12});
+              const bodyMat=window.SYB_MAT({color,roughness:.48,metalness:.16});
+              const roofMat=window.SYB_MAT({color:0xf5f2df,roughness:.55,metalness:.08});
+              const trimMat=window.SYB_MAT({color:0xffd44c,roughness:.48,metalness:.12});
               box([7.0,1.55,2.18],[0,1.20,0],bodyMat,bus);
               box([6.72,.22,2.08],[0,2.08,0],roofMat,bus);
               box([6.82,.18,2.20],[0,.58,0],trimMat,bus);
@@ -13940,8 +13954,8 @@ class ChibiCharacter {
                   cyl(.21,.28,[xx,.48,zz],M.trim,bus,12,[Math.PI/2,0,0]);
                 }
               }
-              const headMat=new THREE.MeshStandardMaterial({color:0xfff2b0,emissive:0xffdc65,emissiveIntensity:1.45});
-              const tailMat=new THREE.MeshStandardMaterial({color:0xff3048,emissive:0xff2038,emissiveIntensity:1.25});
+              const headMat=window.SYB_MAT({color:0xfff2b0,emissive:0xffdc65,emissiveIntensity:1.45});
+              const tailMat=window.SYB_MAT({color:0xff3048,emissive:0xff2038,emissiveIntensity:1.25});
               box([.18,.30,.40],[3.56,.83,-.72],headMat,bus);
               box([.18,.30,.40],[3.56,.83,.72],headMat,bus);
               box([.18,.30,.40],[-3.56,.83,-.72],tailMat,bus);
@@ -13961,8 +13975,8 @@ class ChibiCharacter {
               bike.rotation.y=rot;
               scene.add(bike);
 
-              const bodyMat=new THREE.MeshStandardMaterial({color,roughness:.38,metalness:.25});
-              const chromeMat=new THREE.MeshStandardMaterial({color:0xb9c8d8,roughness:.25,metalness:.68});
+              const bodyMat=window.SYB_MAT({color,roughness:.38,metalness:.25});
+              const chromeMat=window.SYB_MAT({color:0xb9c8d8,roughness:.25,metalness:.68});
               box([1.65,.28,.42],[0,.68,0],bodyMat,bike);
               box([.75,.28,.58],[-.22,.94,0],M.dark,bike);
               box([.42,.50,.38],[.52,.95,0],bodyMat,bike);
@@ -13974,13 +13988,13 @@ class ChibiCharacter {
               }
 
               // Small voxel rider so the motorcycle reads clearly at a distance.
-              const riderShirt=new THREE.MeshStandardMaterial({color:0x4d80c8,roughness:.72});
-              const riderSkin=new THREE.MeshStandardMaterial({color:0xd7a178,roughness:.78});
+              const riderShirt=window.SYB_MAT({color:0x4d80c8,roughness:.72});
+              const riderSkin=window.SYB_MAT({color:0xd7a178,roughness:.78});
               box([.52,.62,.48],[-.12,1.45,0],riderShirt,bike);
               box([.46,.46,.46],[-.02,1.98,0],riderSkin,bike);
               box([.50,.18,.50],[-.02,2.21,0],M.dark,bike);
-              const headMat=new THREE.MeshStandardMaterial({color:0xfff1b2,emissive:0xffd95f,emissiveIntensity:1.30});
-              const tailMat=new THREE.MeshStandardMaterial({color:0xff3048,emissive:0xff2038,emissiveIntensity:1.20});
+              const headMat=window.SYB_MAT({color:0xfff1b2,emissive:0xffd95f,emissiveIntensity:1.30});
+              const tailMat=window.SYB_MAT({color:0xff3048,emissive:0xff2038,emissiveIntensity:1.20});
               box([.12,.22,.22],[1.17,.75,0],headMat,bike);
               box([.12,.20,.22],[-1.10,.75,0],tailMat,bike);
 
@@ -14046,7 +14060,7 @@ class ChibiCharacter {
               }
 
               function bulbMaterial(color){
-                return new THREE.MeshStandardMaterial({
+                return window.SYB_MAT({
                   color:0x27313d,emissive:color,emissiveIntensity:.08,
                   roughness:.46,metalness:.08
                 });
@@ -14105,13 +14119,13 @@ class ChibiCharacter {
                 const g=new THREE.Group();
                 g.position.set(x,0,z);g.rotation.y=rotationY;scene.add(g);
                 box([.26,2.55,.26],[0,1.275,0],M.dark,g);
-                const screenMat=new THREE.MeshStandardMaterial({
+                const screenMat=window.SYB_MAT({
                   map:pedestrianTexture(false,0),emissive:0xffffff,
                   emissiveIntensity:.18,roughness:.58
                 });
                 const screen=new THREE.Mesh(new THREE.BoxGeometry(1.55,.98,.22),screenMat);
                 screen.position.set(0,2.70,.14);screen.castShadow=true;g.add(screen);
-                const buttonMat=new THREE.MeshStandardMaterial({
+                const buttonMat=window.SYB_MAT({
                   color:0xffd23f,emissive:0xffb000,emissiveIntensity:.58,roughness:.42
                 });
                 const button=new THREE.Mesh(new THREE.BoxGeometry(.54,.54,.32),buttonMat);
@@ -14413,17 +14427,17 @@ class ChibiCharacter {
             // ===== Larger animated cloud system =====
             const clouds=[];
             
-            const cloudWhite=new THREE.MeshStandardMaterial({
+            const cloudWhite=window.SYB_MAT({
               color:0xffffff,
               roughness:.98,
               fog:false
             });
-            const cloudSoft=new THREE.MeshStandardMaterial({
+            const cloudSoft=window.SYB_MAT({
               color:0xe9f7ff,
               roughness:.98,
               fog:false
             });
-            const cloudShade=new THREE.MeshStandardMaterial({
+            const cloudShade=window.SYB_MAT({
               color:0xcfeaff,
               roughness:.98,
               fog:false
@@ -14670,7 +14684,7 @@ class ChibiCharacter {
             const group = new THREE.Group();
             group.position.set(x, 1.5, z);
             
-            const shinyGoldMat = new THREE.MeshStandardMaterial({
+            const shinyGoldMat = window.SYB_MAT({
                 map: getTaskBoxTexture(), 
                 metalness: 0.28,
                 roughness: 0.32,
@@ -15231,7 +15245,7 @@ class ChibiCharacter {
 
             const sign = new THREE.Mesh(
                 new THREE.BoxGeometry(3.0, 0.95, 0.18),
-                new THREE.MeshStandardMaterial({
+                window.SYB_MAT({
                     map: createSignTexture(labelText, '#fff8d6', '#27496b', isInterior ? 'balai' : shopKey),
                     roughness: 0.88
                 })
@@ -15393,7 +15407,7 @@ class ChibiCharacter {
                 addWorldBox(10, 3, 2.2, counterColor, cfg.x, 1.5, cfg.z - 5);
                 addDecorBox(12, 0.4, 2.6, 0xfff8d6, cfg.x, 3.1, cfg.z - 5);
                 addDecorBox(10, 1.6, 0.4, 0x5f738f, cfg.x, 6.6, cfg.z - 11.2);
-                const signMesh = new THREE.Mesh(new THREE.BoxGeometry(7, 2, 0.3), new THREE.MeshStandardMaterial({ map: createSignTexture(SHOP_CATALOG[shopKey].name.toUpperCase(), '#fff8d6', '#294f73', shopKey), roughness:0.85 }));
+                const signMesh = new THREE.Mesh(new THREE.BoxGeometry(7, 2, 0.3), window.SYB_MAT({ map: createSignTexture(SHOP_CATALOG[shopKey].name.toUpperCase(), '#fff8d6', '#294f73', shopKey), roughness:0.85 }));
                 signMesh.position.set(cfg.x, 6.6, cfg.z - 11.3); scene.add(signMesh);
                 // Shelves
                 for(let i=0;i<3;i++) { addWorldBox(3.3, 2.4, 1.5, 0xffffff, cfg.x - 8.5 + i*4.3, 1.2, cfg.z + 7.2, false); }
@@ -26855,7 +26869,7 @@ const originalCreateTaskBox=createTaskBox;
 createTaskBox=function(x,z,id,yearLevel,options={}){
  const rarity=rollRarity();
  const group=new THREE.Group();group.position.set(x,1.5,z);group.userData.phase4BuddyBox=true;
- const mat=new THREE.MeshStandardMaterial({map:createEventTexture(rarity),metalness:rarity.id==='legendary'||rarity.id==='mythic'?.38:.16,roughness:.38,emissive:new THREE.Color(rarity.color),emissiveIntensity:rarity.id==='mythic'?.22:rarity.id==='legendary'?.13:.045});
+ const mat=window.SYB_MAT({map:createEventTexture(rarity),metalness:rarity.id==='legendary'||rarity.id==='mythic'?.38:.16,roughness:.38,emissive:new THREE.Color(rarity.color),emissiveIntensity:rarity.id==='mythic'?.22:rarity.id==='legendary'?.13:.045});
  const mesh=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.5,1.5),mat);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);
  const ring=new THREE.Mesh(new THREE.TorusGeometry(1.08,.055,6,24),new THREE.MeshBasicMaterial({color:rarity.color,transparent:true,opacity:rarity.id==='common'?.22:.55,depthWrite:false}));ring.rotation.x=Math.PI/2;ring.position.y=-.83;group.add(ring);
  scene.add(group);
@@ -27889,6 +27903,7 @@ window.SchoolyardMMORPG=Object.freeze({version:VERSION,open,close,connect,discon
     }catch(err){console.warn('Unable to build HUD character preview:',err);preview.actor=null;}
   }
   function frame(time){
+    if(document.hidden||time-(frame._last||0)<33){requestAnimationFrame(frame);return;}frame._last=time;
     syncText();
     rebuild();
     if(preview.renderer&&preview.actor&&preview.scene&&preview.camera){
@@ -29208,6 +29223,7 @@ window.SchoolyardMMORPG=Object.freeze({version:VERSION,open,close,connect,discon
   }
   function frame(t){
     if(!modal.classList.contains('open')){animationId=0;return;}
+    if(window.SYB_PERF.mobile&&t-(frame._last||0)<33){animationId=requestAnimationFrame(frame);return;}frame._last=t;
     const dt=Math.min(.05,Math.max(.001,(t-lastTime)/1000));lastTime=t;
     rebuild();resize();
     if(autoRotate&&!dragging) targetRotation+=dt*.34;
@@ -30210,7 +30226,7 @@ body.stage2-lobby-active #btn-interact {
     Math.abs(safeFinite(z)-CONFIG.centreZ)<=CONFIG.halfDepth+margin;
 
   function material(color,options={}){
-    return new THREE.MeshStandardMaterial({
+    return window.SYB_MAT({
       color,
       roughness:options.roughness??0.82,
       metalness:options.metalness??0.02,
@@ -32837,7 +32853,7 @@ body.stage4-cinematic-open #mobile-hud-dock { visibility: hidden !important; poi
     if(!state.chapterComplete||fragmentGroup||typeof scene==='undefined'||typeof THREE==='undefined')return fragmentGroup;
     try{
       const group=new THREE.Group();
-      const core=new THREE.Mesh(new THREE.OctahedronGeometry(.64,0),new THREE.MeshStandardMaterial({color:0xffd94d,emissive:0xd28b00,emissiveIntensity:1.2,roughness:.28,metalness:.24}));
+      const core=new THREE.Mesh(new THREE.OctahedronGeometry(.64,0),window.SYB_MAT({color:0xffd94d,emissive:0xd28b00,emissiveIntensity:1.2,roughness:.28,metalness:.24}));
       const halo=new THREE.Mesh(new THREE.OctahedronGeometry(.88,0),new THREE.MeshBasicMaterial({color:0x7ecbff,transparent:true,opacity:.22,wireframe:true,depthWrite:false}));
       core.rotation.z=Math.PI/4;halo.rotation.z=Math.PI/4;group.add(core,halo);
       const light=new THREE.PointLight(0xffd45a,.75,9);group.add(light);
@@ -39671,8 +39687,8 @@ body:has(#fitting-room-container:not(.hidden)) #syh-inventory-btn{
   function createSecret(){
     if(secretGroup||!state.level2Unlocked||typeof THREE==='undefined'||typeof scene==='undefined')return;
     try{
-      const group=new THREE.Group();const base=new THREE.Mesh(new THREE.BoxGeometry(.75,.75,.75),new THREE.MeshStandardMaterial({color:0x7355c4,emissive:0x31196f,emissiveIntensity:.75,roughness:.3}));
-      const cap=new THREE.Mesh(new THREE.OctahedronGeometry(.48,0),new THREE.MeshStandardMaterial({color:0xffd948,emissive:0xa96e00,emissiveIntensity:1,roughness:.25}));cap.position.y=.78;group.add(base,cap);group.position.set(43.6,.55,37.2);group.userData.stage6Secret=true;scene.add(group);secretGroup=group;
+      const group=new THREE.Group();const base=new THREE.Mesh(new THREE.BoxGeometry(.75,.75,.75),window.SYB_MAT({color:0x7355c4,emissive:0x31196f,emissiveIntensity:.75,roughness:.3}));
+      const cap=new THREE.Mesh(new THREE.OctahedronGeometry(.48,0),window.SYB_MAT({color:0xffd948,emissive:0xa96e00,emissiveIntensity:1,roughness:.25}));cap.position.y=.78;group.add(base,cap);group.position.set(43.6,.55,37.2);group.userData.stage6Secret=true;scene.add(group);secretGroup=group;
       const spin=time=>{if(!secretGroup)return;secretGroup.rotation.y=time*.001;secretGroup.position.y=.55+Math.sin(time*.002)*.12;requestAnimationFrame(spin);};requestAnimationFrame(spin);
     }catch(_){ }
   }
@@ -40560,13 +40576,13 @@ body.syh-modal-mode #syh-minimap-card{opacity:.14 !important;}
     set('npc_school_security_azlan',objective==='question_azlan'?t('azlan'):null);
   }
 
-  function makeGlow(color=0x55ccff){return new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:1.15,roughness:.28,metalness:.12,transparent:true,opacity:.95});}
+  function makeGlow(color=0x55ccff){return window.SYB_MAT({color,emissive:color,emissiveIntensity:1.15,roughness:.28,metalness:.12,transparent:true,opacity:.95});}
   function createClueObjects(){if(typeof THREE==='undefined'||typeof scene==='undefined')return false;
     try{
       if(!residueGroup){residueGroup=new THREE.Group();const ring=new THREE.Mesh(new THREE.TorusGeometry(.8,.12,8,24),makeGlow(0x55ccff));ring.rotation.x=Math.PI/2;const core=new THREE.Mesh(new THREE.OctahedronGeometry(.3,0),makeGlow(0x8eeeff));core.position.y=.28;residueGroup.add(ring,core);residueGroup.position.set(positions.residue.x,positions.residue.y,positions.residue.z);scene.add(residueGroup);}
-      if(!pageGroup){pageGroup=new THREE.Group();const page=new THREE.Mesh(new THREE.BoxGeometry(1.15,.08,.86),new THREE.MeshStandardMaterial({color:0xfff6d8,emissive:0x2b7ca8,emissiveIntensity:.18,roughness:.8}));const symbol=new THREE.Mesh(new THREE.BoxGeometry(.42,.09,.42),makeGlow(0x55ccff));symbol.position.set(.18,.08,0);pageGroup.add(page,symbol);pageGroup.position.set(positions.page.x,positions.page.y,positions.page.z);pageGroup.rotation.y=-.35;scene.add(pageGroup);}
+      if(!pageGroup){pageGroup=new THREE.Group();const page=new THREE.Mesh(new THREE.BoxGeometry(1.15,.08,.86),window.SYB_MAT({color:0xfff6d8,emissive:0x2b7ca8,emissiveIntensity:.18,roughness:.8}));const symbol=new THREE.Mesh(new THREE.BoxGeometry(.42,.09,.42),makeGlow(0x55ccff));symbol.position.set(.18,.08,0);pageGroup.add(page,symbol);pageGroup.position.set(positions.page.x,positions.page.y,positions.page.z);pageGroup.rotation.y=-.35;scene.add(pageGroup);}
       if(!trailGroups.length){trailGroups=positions.trail.map((pos,index)=>{const g=new THREE.Group();const core=new THREE.Mesh(new THREE.OctahedronGeometry(.46,0),makeGlow(0x43baff));const halo=new THREE.Mesh(new THREE.OctahedronGeometry(.72,0),new THREE.MeshBasicMaterial({color:0x8deeff,wireframe:true,transparent:true,opacity:.32,depthWrite:false}));g.add(core,halo);g.position.set(pos.x,pos.y,pos.z);g.userData.stage61TrailIndex=index;scene.add(g);return g;});}
-      if(!cacheGroup){cacheGroup=new THREE.Group();const base=new THREE.Mesh(new THREE.BoxGeometry(1.25,.75,1.25),new THREE.MeshStandardMaterial({color:0x173c75,emissive:0x0c2f69,emissiveIntensity:.8,roughness:.45}));const cap=new THREE.Mesh(new THREE.OctahedronGeometry(.58,0),makeGlow(0x64dcff));cap.position.y=.82;const ring=new THREE.Mesh(new THREE.TorusGeometry(.75,.1,8,24),makeGlow(0xffd948));ring.position.y=.82;ring.rotation.x=Math.PI/2;cacheGroup.add(base,cap,ring);cacheGroup.position.set(positions.cache.x,positions.cache.y,positions.cache.z);scene.add(cacheGroup);}
+      if(!cacheGroup){cacheGroup=new THREE.Group();const base=new THREE.Mesh(new THREE.BoxGeometry(1.25,.75,1.25),window.SYB_MAT({color:0x173c75,emissive:0x0c2f69,emissiveIntensity:.8,roughness:.45}));const cap=new THREE.Mesh(new THREE.OctahedronGeometry(.58,0),makeGlow(0x64dcff));cap.position.y=.82;const ring=new THREE.Mesh(new THREE.TorusGeometry(.75,.1,8,24),makeGlow(0xffd948));ring.position.y=.82;ring.rotation.x=Math.PI/2;cacheGroup.add(base,cap,ring);cacheGroup.position.set(positions.cache.x,positions.cache.y,positions.cache.z);scene.add(cacheGroup);}
       return true;
     }catch(error){console.warn('[Stage 6.1] Clue visuals unavailable.',error);return false;}
   }
@@ -44190,7 +44206,7 @@ body.school-interior-active #school-world-chip{display:flex}
       {q:{ms:'Corak berulang membantu menghasilkan...',en:'A repeating pattern helps create...'},o:[{ms:'Irama visual',en:'Visual rhythm'},{ms:'Kesunyian',en:'Silence'},{ms:'Kegelapan',en:'Darkness'},{ms:'Kekeliruan sahaja',en:'Only confusion'}],a:0,topic:'Corak / Pattern'}]}
   ];
 
-  function material(color,rough=.72,metal=.02,extra={}){return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal,flatShading:true,...extra});}
+  function material(color,rough=.72,metal=.02,extra={}){return window.SYB_MAT({color,roughness:rough,metalness:metal,flatShading:true,...extra});}
   const MAT={floor:material(0xe9eef4,.82),corridor:material(0xc8dded,.76),wall:material(0xf7f1df,.83),trim:material(0x2d5b89,.65),navy:material(0x163d69,.66),wood:material(0xaa7449,.8),desk:material(0xd7a66b,.8),chair:material(0x44739e,.72),white:material(0xffffff,.7),glass:material(0x8fd8ef,.2,.1,{transparent:true,opacity:.38,depthWrite:false}),gold:material(0xf2c94c,.6),black:material(0x17202b,.75),green:material(0x73c9a5,.7),red:material(0xe7737f,.68)};
   function addBox(w,h,d,x,y,z,mat=MAT.wall,collide=false,label='school-object'){
     const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;mesh.visible=false;worldGroup.add(mesh);state.objects.push(mesh);
@@ -44371,7 +44387,7 @@ body.school-interior-active #school-world-chip{display:flex}
   const state={built:false,group:null,ring:null,beacon:null,label:null,lastFrame:0};
   const $=id=>document.getElementById(id);
   const isEnglish=()=>{try{return (typeof getInterfaceLanguage==='function'?getInterfaceLanguage():document.documentElement.lang||'ms').toLowerCase().startsWith('en');}catch(_){return false;}};
-  function material(color,rough=.72,emissive=0x000000,intensity=0){return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:.02,flatShading:true,emissive,emissiveIntensity:intensity});}
+  function material(color,rough=.72,emissive=0x000000,intensity=0){return window.SYB_MAT({color,roughness:rough,metalness:.02,flatShading:true,emissive,emissiveIntensity:intensity});}
   function box(group,w,h,d,x,y,z,mat){const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;}
   function canvasLabel(text,width=1024,height=220){
     const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
