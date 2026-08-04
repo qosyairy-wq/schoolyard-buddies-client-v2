@@ -1,5 +1,5 @@
-const CACHE='schoolyard-buddies-v3.3.0-hud';
-const CORE=['/','/index.html','/mobile.html','/mobile-game.html','/desktop.html','/v3-mobile.css','/v3-mobile.js','/v3-fullscreen-ui.css','/v3-fullscreen-ui.js','/universal-fullscreen-v3.0.5.css','/universal-fullscreen-v3.0.5.js','/manifest.webmanifest','/assets/schoolyard-logo.png'];
+const CACHE='schoolyard-buddies-v3.1.0';
+const CORE=['/','/index.html','/mobile.html','/mobile-game.html','/desktop.html','/v3-mobile.css','/v3-mobile.js','/v3-fullscreen-ui.css','/v3-fullscreen-ui.js','/universal-fullscreen-v3.0.5.css','/universal-fullscreen-v3.0.5.js','/manifest.webmanifest'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
