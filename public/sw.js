@@ -1,4 +1,4 @@
-const CACHE='schoolyard-buddies-v3.0.7';
+const CACHE='schoolyard-buddies-v3.0.8';
 const CORE=['/','/index.html','/mobile.html','/mobile-game.html','/desktop.html','/v3-mobile.css','/v3-mobile.js','/v3-fullscreen-ui.css','/v3-fullscreen-ui.js','/universal-fullscreen-v3.0.5.css','/universal-fullscreen-v3.0.5.js','/manifest.webmanifest'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
