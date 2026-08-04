@@ -1,0 +1,233 @@
+
+/* Schoolyard Buddies v3.0.4 — Universal fullscreen overlays
+   Mobile: all main menus/panels/chat become fullscreen.
+   Desktop: shop/fitting/inventory and chat become viewport-sized.
+*/
+:root { --syb-vh: 100dvh; }
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+}
+
+/* Restore vertical scrolling for onboarding despite the legacy global touch-action:none. */
+#start-screen,
+#start-screen *,
+.screen-overlay,
+.screen-overlay * {
+  -webkit-overflow-scrolling: touch;
+}
+#start-screen:not(.hidden) {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: var(--syb-vh) !important;
+  min-height: var(--syb-vh) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain !important;
+  touch-action: pan-y !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding-bottom: max(36px, calc(env(safe-area-inset-bottom) + 24px)) !important;
+}
+#start-screen:not(.hidden) * {
+  touch-action: manipulation !important;
+}
+#start-screen:not(.hidden) > .pixel-box {
+  flex: 0 0 auto !important;
+  height: auto !important;
+  min-height: max-content !important;
+  overflow: visible !important;
+}
+
+/* Desktop shop flow: E opens a real fullscreen shop page. */
+#shop-container:not(.hidden),
+#fitting-room-container:not(.hidden),
+#inventory-container:not(.hidden) {
+  position: fixed !important;
+  inset: 0 !important;
+  transform: none !important;
+  width: 100vw !important;
+  height: var(--syb-vh) !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  z-index: 36000 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  padding:
+    max(14px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right))
+    max(14px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left)) !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+  background: linear-gradient(180deg,#ffffff 0%,#eaf5ff 100%) !important;
+  touch-action: pan-y !important;
+}
+#shop-container .shop-scroll,
+#fitting-room-container .fitting-scroll,
+#inventory-container .inventory-scroll {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+  touch-action: pan-y !important;
+}
+#shop-container .shop-footer-actions,
+#fitting-room-container .fitting-footer-actions,
+#inventory-container .inventory-footer-actions {
+  flex: 0 0 auto !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 5 !important;
+  margin-top: 10px !important;
+  padding: 10px 0 max(4px,env(safe-area-inset-bottom)) !important;
+  background: #eaf5ff !important;
+}
+
+/* Chat: dynamic viewport on desktop and true fullscreen on phone. */
+#syh-quick-chat-panel {
+  position: fixed !important;
+  inset: clamp(12px, 2.2vw, 28px) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 22px !important;
+  z-index: 37000 !important;
+}
+#syh-quick-chat-panel.open {
+  display: flex !important;
+}
+#syh-quick-chat-log {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+}
+#syh-chat-close {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 52px !important;
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  min-height: 52px !important;
+  position: relative !important;
+  z-index: 3 !important;
+  touch-action: manipulation !important;
+}
+
+/* Hide gameplay while a blocking full-screen UI is open. */
+body.syb-blocking-ui-open #canvas-container,
+body.syb-blocking-ui-open #hud,
+body.syb-blocking-ui-open #action-buttons,
+body.syb-blocking-ui-open #joystick-zone,
+body.syb-blocking-ui-open #camera-zone,
+body.syb-blocking-ui-open #syh-chat-fab,
+body.syb-blocking-ui-open .mobile-hud-toggle,
+body.syb-blocking-ui-open .mobile-hud-edge-toggle {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Phone: all principal UI panels are viewport pages. */
+@media (hover:none) and (pointer:coarse), (max-width:920px) {
+  #syh-quick-chat-panel {
+    inset: 0 !important;
+    width: 100vw !important;
+    height: var(--syb-vh) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-top: env(safe-area-inset-top) !important;
+    padding-right: env(safe-area-inset-right) !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+    padding-left: env(safe-area-inset-left) !important;
+    box-sizing: border-box !important;
+  }
+  .syh-quick-chat-head {
+    min-height: 72px !important;
+    flex: 0 0 auto !important;
+  }
+  .syh-quick-chat-compose {
+    flex: 0 0 auto !important;
+    padding-bottom: max(12px,env(safe-area-inset-bottom)) !important;
+  }
+
+  #dialog-container:not(.hidden),
+  #task-container:not(.hidden),
+  #focus-mode-screen:not(.hidden),
+  #education-centre-screen:not(.hidden),
+  #world-map-screen:not(.hidden),
+  #report-screen:not(.hidden),
+  #pause-screen:not(.hidden),
+  #themed-confirm-screen:not(.hidden),
+  #story-progression-screen:not(.hidden),
+  #mmorpg-screen:not(.hidden),
+  #unlock-showcase.show {
+    position: fixed !important;
+    inset: 0 !important;
+    transform: none !important;
+    width: 100vw !important;
+    height: var(--syb-vh) !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    z-index: 36000 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+    padding:
+      max(12px,env(safe-area-inset-top))
+      max(12px,env(safe-area-inset-right))
+      max(18px,env(safe-area-inset-bottom))
+      max(12px,env(safe-area-inset-left)) !important;
+  }
+
+  .education-centre-window,
+  .focus-window,
+  .world-map-window,
+  .report-window,
+  .story-window,
+  .mmorpg-window,
+  .themed-confirm-window {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  #shop-container:not(.hidden),
+  #fitting-room-container:not(.hidden),
+  #inventory-container:not(.hidden) {
+    padding:
+      max(10px,env(safe-area-inset-top))
+      max(10px,env(safe-area-inset-right))
+      max(12px,env(safe-area-inset-bottom))
+      max(10px,env(safe-area-inset-left)) !important;
+  }
+
+  #shop-container button,
+  #fitting-room-container button,
+  #inventory-container button,
+  #syh-quick-chat-panel button {
+    min-height: 48px !important;
+    touch-action: manipulation !important;
+  }
+}
