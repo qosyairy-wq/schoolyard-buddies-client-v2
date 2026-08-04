@@ -1,0 +1,100 @@
+/* Schoolyard Buddies v3.0.1 — universal fullscreen blocking UI (desktop + mobile) */
+:root { --syb-ui-safe-top: env(safe-area-inset-top, 0px); --syb-ui-safe-right: env(safe-area-inset-right, 0px); --syb-ui-safe-bottom: env(safe-area-inset-bottom, 0px); --syb-ui-safe-left: env(safe-area-inset-left, 0px); }
+body.syb-blocking-ui-open { overflow:hidden!important; }
+body.syb-blocking-ui-open #canvas-container,
+body.syb-blocking-ui-open #hud,
+body.syb-blocking-ui-open #joystick-zone,
+body.syb-blocking-ui-open #camera-zone,
+body.syb-blocking-ui-open #action-buttons,
+body.syb-blocking-ui-open #syh-menu-shortcut,
+body.syb-blocking-ui-open #stage61-beacon { visibility:hidden!important; pointer-events:none!important; }
+
+/* Only actual in-game blocking panels are targeted. Start/loading/profile screens are excluded. */
+:is(
+  #dialog-container:not(.hidden),
+  #task-container:not(.hidden),
+  #hud-help-modal:not(.hidden),
+  #school-assignment-overlay.syb-visible,
+  #syh-inventory-overlay.syb-visible,
+  #syh-secret-code-overlay.syb-visible,
+  #syh-quick-chat-panel.syb-visible,
+  #character-3d-preview-modal.syb-visible,
+  #stage137-modal-fullscreen.syb-visible,
+  #focus-question-view.syb-visible,
+  .quiz-modal.syb-visible,
+  .question-modal.syb-visible,
+  .play-task-modal.syb-visible,
+  .play-mode-modal.syb-visible,
+  [role="dialog"].syb-visible
+) {
+  position:fixed!important;
+  inset:0!important;
+  width:100dvw!important;
+  height:100dvh!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  transform:none!important;
+  border-radius:0!important;
+  box-sizing:border-box!important;
+  z-index:2147483000!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  padding:max(22px,var(--syb-ui-safe-top)) max(22px,var(--syb-ui-safe-right)) max(26px,var(--syb-ui-safe-bottom)) max(22px,var(--syb-ui-safe-left))!important;
+  background:linear-gradient(180deg,#0b315f 0%,#061a34 100%)!important;
+  color:#fff!important;
+  pointer-events:auto!important;
+}
+
+#dialog-container:not(.hidden), #task-container:not(.hidden) {
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:18px!important;
+}
+#dialog-container .dialog-header, #task-container .dialog-header {
+  color:#ffd84a!important;
+  font-size:clamp(28px,4vw,52px)!important;
+  line-height:1.15!important;
+  text-align:center!important;
+  padding:0 72px!important;
+}
+#dialog-container .dialog-text, #task-container .dialog-text {
+  width:min(1100px,100%)!important;
+  max-height:none!important;
+  overflow:visible!important;
+  margin:0 auto!important;
+  font-size:clamp(20px,2.2vw,34px)!important;
+  line-height:1.55!important;
+  text-align:center!important;
+}
+#dialog-container .dialog-options, #task-container .dialog-options {
+  width:min(1100px,100%)!important;
+  margin:12px auto 0!important;
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;
+  gap:16px!important;
+}
+#dialog-container .dialog-options button, #task-container .dialog-options button,
+body.syb-blocking-ui-open .pixel-btn {
+  min-height:64px!important;
+  font-size:clamp(18px,2vw,28px)!important;
+}
+body.syb-blocking-ui-open .dialog-close-btn,
+body.syb-blocking-ui-open [data-close],
+body.syb-blocking-ui-open [aria-label*="close" i] {
+  position:fixed!important;
+  top:max(14px,var(--syb-ui-safe-top))!important;
+  right:max(14px,var(--syb-ui-safe-right))!important;
+  z-index:2147483640!important;
+  width:60px!important;
+  height:60px!important;
+  pointer-events:auto!important;
+}
+@media (max-width:700px) {
+  :is(#dialog-container:not(.hidden),#task-container:not(.hidden),.syb-visible[role="dialog"],.quiz-modal.syb-visible,.question-modal.syb-visible) {
+    padding:max(16px,var(--syb-ui-safe-top)) max(14px,var(--syb-ui-safe-right)) max(18px,var(--syb-ui-safe-bottom)) max(14px,var(--syb-ui-safe-left))!important;
+  }
+  #dialog-container .dialog-options, #task-container .dialog-options { grid-template-columns:1fr!important; }
+}
