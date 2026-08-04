@@ -46447,6 +46447,196 @@ body > #syh-quick-chat-panel.open #syh-chat-close {
     :init();
 })();
 </script>
+
+<style id="syb-console-skin">
+/* ============================================================
+   SYB CONSOLE SKIN v1 (Fasa 3) — Nintendo/console-style HUD
+   Overlay sahaja: tiada perubahan layout/logik, hanya visual.
+   ============================================================ */
+#hud{
+  --syb-glass: rgba(15,26,48,.80);
+  --syb-glass-2: rgba(24,40,72,.68);
+  --syb-line: rgba(255,255,255,.16);
+  --syb-line-hi: rgba(255,255,255,.30);
+  --syb-text: #f2f7ff;
+  --syb-dim: rgba(222,233,255,.70);
+  --syb-gold: #ffd23f;
+  --syb-cyan: #5fd9ff;
+  --syb-blue: #4f8dff;
+  --syb-green:#3ddc84;
+  --syb-red:  #ff5a6a;
+  --syb-r: 16px;
+  --syb-shadow: 0 10px 26px rgba(4,10,24,.45), 0 2px 6px rgba(4,10,24,.35);
+  font-family:'Fredoka','Oxanium',system-ui,sans-serif;
+}
+/* ---------- Safe area anchoring ---------- */
+#hud .hud-top-left{padding-left:calc(env(safe-area-inset-left,0px) + 10px);padding-top:calc(env(safe-area-inset-top,0px) + 8px);}
+#hud .hud-top-right{padding-right:calc(env(safe-area-inset-right,0px) + 10px);padding-top:calc(env(safe-area-inset-top,0px) + 8px);}
+#action-buttons{right:calc(env(safe-area-inset-right,0px) + 22px)!important;bottom:calc(env(safe-area-inset-bottom,0px) + 26px)!important;}
+#joystick-zone{padding-left:env(safe-area-inset-left,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+
+/* ---------- Glass panel base ---------- */
+#hud .hud-player-card, #hud .hud-quest-card, #hud .hud-support-panel,
+#hud .hud-level-panel, #hud .hud-map-card, #hud .hud-quick-panel, #hud .hud-nav-panel{
+  background:linear-gradient(180deg,var(--syb-glass-2) 0%,var(--syb-glass) 100%)!important;
+  border:1px solid var(--syb-line)!important;
+  border-top-color:var(--syb-line-hi)!important;
+  border-radius:var(--syb-r)!important;
+  box-shadow:var(--syb-shadow)!important;
+  color:var(--syb-text)!important;
+}
+@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)){
+  #hud .hud-player-card, #hud .hud-quest-card, #hud .hud-support-panel,
+  #hud .hud-level-panel, #hud .hud-map-card, #hud .hud-quick-panel, #hud .hud-nav-panel{
+    background:linear-gradient(180deg,rgba(24,40,72,.52) 0%,rgba(15,26,48,.62) 100%)!important;
+    -webkit-backdrop-filter:blur(10px) saturate(1.35);backdrop-filter:blur(10px) saturate(1.35);
+  }
+}
+/* teks dalam panel */
+#hud .hud-player-label,#hud .hud-quest-label,#hud .hud-support-title,
+#hud .hud-level-title,#hud .hud-map-hint,#hud .hud-nav-title,#hud .hud-quick-help-note,
+#hud .hud-level-sub,#hud .hud-level-unlock-note{
+  color:var(--syb-dim)!important;letter-spacing:.06em;text-transform:uppercase;
+  font-size:10px!important;font-weight:600!important;
+}
+#hud .hud-level-sub,#hud .hud-level-unlock-note,#hud .hud-quick-help-note{text-transform:none;letter-spacing:0;}
+#hud .hud-player-name{color:var(--syb-text)!important;font-weight:700!important;letter-spacing:.02em;}
+#hud .hud-player-subtitle,#hud .hud-support-line,#hud #hud-quest-text,
+#hud .hud-player-style,#hud .hud-level-meta{color:var(--syb-dim)!important;}
+#hud .hud-player-style b{color:var(--syb-text)!important;}
+
+/* ---------- Avatar ---------- */
+#hud .hud-player-avatar{
+  border-radius:14px!important;overflow:hidden;
+  border:1px solid var(--syb-line-hi)!important;
+  background:radial-gradient(120% 120% at 30% 20%,#3a5fa8 0%,#16264a 70%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+}
+#hud .hud-player-avatar-badge{
+  background:linear-gradient(180deg,var(--syb-gold),#f4a615)!important;
+  color:#3a2a00!important;border:none!important;border-radius:8px!important;
+  font-weight:800!important;letter-spacing:.05em;box-shadow:0 2px 6px rgba(0,0,0,.35);
+}
+
+/* ---------- Stat pills ---------- */
+#hud .hud-stat-pill{
+  background:rgba(255,255,255,.10)!important;
+  border:1px solid var(--syb-line)!important;
+  color:var(--syb-text)!important;
+  border-radius:999px!important;
+  min-height:26px!important;padding:3px 10px!important;
+  font-weight:700!important;font-size:12px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
+  transition:transform .18s cubic-bezier(.2,1.6,.4,1);
+}
+#hud .hud-stat-pill.coin{background:linear-gradient(180deg,rgba(255,210,63,.28),rgba(244,166,21,.20))!important;border-color:rgba(255,210,63,.55)!important;color:var(--syb-gold)!important;}
+#hud .hud-stat-pill.xp{background:linear-gradient(180deg,rgba(95,217,255,.24),rgba(79,141,255,.18))!important;border-color:rgba(95,217,255,.5)!important;color:var(--syb-cyan)!important;}
+#hud .hud-stat-pill.mode-education{background:linear-gradient(180deg,rgba(61,220,132,.24),rgba(28,160,96,.18))!important;border-color:rgba(61,220,132,.5)!important;color:var(--syb-green)!important;}
+#hud .syb-bump{transform:scale(1.18);}
+
+/* ---------- Quest banner ---------- */
+#hud .hud-quest-card{position:relative;padding-left:16px!important;}
+#hud .hud-quest-card::before{
+  content:"";position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:4px;
+  background:linear-gradient(180deg,var(--syb-gold),var(--syb-cyan));
+}
+#hud #hud-quest-text{color:var(--syb-text)!important;font-weight:600!important;}
+
+/* ---------- Level / XP bar ---------- */
+#hud .hud-level-track{background:rgba(255,255,255,.10)!important;border:1px solid var(--syb-line)!important;border-radius:999px!important;overflow:hidden;height:10px!important;}
+#hud .hud-level-fill{
+  background:linear-gradient(90deg,var(--syb-cyan) 0%,var(--syb-blue) 55%,var(--syb-gold) 100%)!important;
+  border-radius:999px!important;
+  transition:width .6s cubic-bezier(.22,1,.36,1)!important;
+  box-shadow:0 0 10px rgba(95,217,255,.55);
+}
+#hud .hud-level-badge{
+  background:linear-gradient(180deg,var(--syb-blue),#2f5fd0)!important;color:#fff!important;
+  border:none!important;border-radius:12px!important;font-weight:800!important;
+  box-shadow:0 3px 8px rgba(20,50,140,.5),inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+/* ---------- Minimap ---------- */
+#hud .hud-map-card #minimap-container{border-radius:12px;overflow:hidden;border:1px solid var(--syb-line-hi);box-shadow:inset 0 0 0 1px rgba(0,0,0,.3);}
+#hud .hud-map-heading span:first-child{color:var(--syb-text)!important;font-weight:700!important;}
+
+/* ---------- Buttons: base press feel ---------- */
+#hud .hud-action-btn{
+  border-radius:14px!important;
+  border:1px solid var(--syb-line)!important;border-top-color:var(--syb-line-hi)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.05))!important;
+  color:var(--syb-text)!important;
+  box-shadow:0 4px 12px rgba(4,10,24,.40),inset 0 1px 0 rgba(255,255,255,.18)!important;
+  transition:transform .12s cubic-bezier(.2,1.4,.4,1),box-shadow .12s ease,filter .12s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+#hud .hud-action-btn:active{transform:scale(.94);filter:brightness(1.15);box-shadow:0 2px 6px rgba(4,10,24,.45),inset 0 1px 0 rgba(255,255,255,.18)!important;}
+#hud .hud-quick-icon{font-size:20px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));}
+#hud .hud-quick-label{color:var(--syb-dim)!important;font-size:10px!important;font-weight:700!important;letter-spacing:.06em;text-transform:uppercase;}
+
+/* ---------- Main menu rows ---------- */
+#hud .hud-nav-btn{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03))!important;}
+#hud .hud-nav-btn b{color:var(--syb-text)!important;font-weight:700!important;}
+#hud .hud-nav-btn small{color:var(--syb-dim)!important;}
+#hud .hud-nav-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:12px;font-size:19px;flex:0 0 38px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 3px 7px rgba(4,10,24,.35);
+}
+#hud #btn-hud-story .hud-nav-icon{background:linear-gradient(180deg,#b07cff,#7a45e6);}
+#hud #btn-hud-world-events .hud-nav-icon{background:linear-gradient(180deg,#ffb04d,#f07f1a);}
+#hud #btn-hud-report .hud-nav-icon{background:linear-gradient(180deg,#5fb2ff,#2f6fe0);}
+#hud #btn-hud-inventory .hud-nav-icon{background:linear-gradient(180deg,#ff8ac2,#e6559a);}
+#hud #btn-hud-focus .hud-nav-icon{background:linear-gradient(180deg,#54e29a,#1fae66);}
+#hud #btn-exit-shop .hud-nav-icon{background:linear-gradient(180deg,#ff7a86,#e04654);}
+
+/* ---------- Mobile controls ---------- */
+.round-btn{
+  border:2px solid rgba(255,255,255,.55)!important;
+  box-shadow:0 6px 16px rgba(4,10,24,.45),inset 0 2px 0 rgba(255,255,255,.35)!important;
+  transition:transform .1s cubic-bezier(.2,1.4,.4,1)!important;
+  -webkit-tap-highlight-color:transparent;
+}
+.round-btn:active{transform:scale(.92)!important;}
+#joystick-base{
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.22),rgba(255,255,255,.06) 60%)!important;
+  border:2px solid rgba(255,255,255,.35)!important;
+  box-shadow:0 8px 20px rgba(4,10,24,.40)!important;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+#joystick-stick{
+  background:linear-gradient(180deg,#fdfeff,#c9d8ef)!important;
+  border:2px solid rgba(255,255,255,.8)!important;
+  box-shadow:0 4px 10px rgba(4,10,24,.5),inset 0 2px 0 #fff!important;
+}
+
+/* ---------- Notifikasi & chip ---------- */
+#afk-status-chip{
+  background:var(--syb-glass)!important;color:var(--syb-text)!important;
+  border:1px solid var(--syb-line-hi)!important;border-radius:999px!important;
+  box-shadow:var(--syb-shadow)!important;
+}
+/* collapse behaviour dikekalkan */
+#hud .hud-block-collapsed{overflow:hidden;}
+</style>
+<script id="syb-console-skin-js">
+/* Fasa 3: micro-animation — pop bila nilai coin/XP/level berubah */
+(function(){
+  var ids=['hud-coins','hud-xp','hud-progression-level','hud-v2-coins','hud-v2-gems','hud-v2-stars','hud-v2-player-xp'];
+  function arm(el){
+    var last=el.textContent;
+    new MutationObserver(function(){
+      if(el.textContent===last)return;last=el.textContent;
+      var pill=el.closest('.hud-stat-pill')||el;
+      pill.classList.remove('syb-bump');void pill.offsetWidth;pill.classList.add('syb-bump');
+      setTimeout(function(){pill.classList.remove('syb-bump');},260);
+    }).observe(el,{childList:true,characterData:true,subtree:true});
+  }
+  function init(){ids.forEach(function(id){var el=document.getElementById(id);if(el)arm(el);});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
 
