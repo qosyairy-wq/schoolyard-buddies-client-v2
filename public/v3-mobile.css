@@ -1,0 +1,72 @@
+/* Schoolyard Buddies v3.0.0 — authoritative mobile presentation layer */
+@media (hover:none), (pointer:coarse), (max-width:1100px) {
+  :root { --syb-vh: 1dvh; }
+  html, body { width:100%; height:100%; min-height:100dvh; margin:0; overflow:hidden; overscroll-behavior:none; background:#071b35; }
+  #app, #game-container, #canvas-container { position:fixed!important; inset:0!important; width:100dvw!important; height:100dvh!important; max-width:none!important; max-height:none!important; margin:0!important; }
+  #canvas-container canvas, #game-canvas { display:block!important; width:100dvw!important; height:100dvh!important; max-width:none!important; max-height:none!important; }
+
+  /* One compact gameplay HUD. Retire duplicate desktop control cards on mobile. */
+  #syh-controls-card, #syh-hud-right, #syh-hud-counters, .syh-desktop-only { display:none!important; pointer-events:none!important; }
+  #syh-menu-shortcut {
+    position:fixed!important; left:max(14px,env(safe-area-inset-left))!important; top:max(14px,env(safe-area-inset-top))!important;
+    width:68px!important; height:68px!important; min-width:68px!important; z-index:100200!important;
+    border-radius:21px!important; display:grid!important; place-items:center!important; pointer-events:auto!important; touch-action:manipulation!important;
+  }
+  #syh-menu-shortcut .syh-key { font-size:0!important; }
+  #syh-menu-shortcut .syh-key::after { content:'☰'; font-size:34px; }
+  #syh-menu-shortcut .syh-ctrl-label { display:none!important; }
+
+  #camera-zone { position:fixed!important; inset:0!important; z-index:20!important; pointer-events:auto!important; touch-action:none!important; }
+  #joystick-zone {
+    position:fixed!important; left:max(20px,env(safe-area-inset-left))!important; bottom:max(20px,env(safe-area-inset-bottom))!important;
+    width:150px!important; height:150px!important; z-index:100100!important; display:block!important; visibility:visible!important;
+    pointer-events:auto!important; touch-action:none!important; opacity:1!important;
+  }
+  #action-buttons {
+    position:fixed!important; right:max(18px,env(safe-area-inset-right))!important; bottom:max(18px,env(safe-area-inset-bottom))!important;
+    z-index:100100!important; display:flex!important; visibility:visible!important; pointer-events:auto!important; touch-action:none!important;
+  }
+
+  /* Fullscreen shell for all blocking UI. */
+  body.syb-v3-modal-open #camera-zone,
+  body.syb-v3-modal-open #joystick-zone,
+  body.syb-v3-modal-open #action-buttons,
+  body.syb-v3-modal-open #syh-menu-shortcut { display:none!important; pointer-events:none!important; }
+  body.syb-v3-modal-open #canvas-container { visibility:hidden!important; pointer-events:none!important; }
+
+  #syb-v3-menu {
+    position:fixed; inset:0; z-index:2147483000; display:none; flex-direction:column;
+    width:100dvw; height:100dvh; box-sizing:border-box; overflow:auto; color:#fff;
+    padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));
+    background:linear-gradient(180deg,#0b2d59,#06182f);
+  }
+  #syb-v3-menu.open { display:flex; }
+  .syb-v3-head { display:flex; align-items:center; justify-content:space-between; gap:14px; padding-bottom:16px; border-bottom:4px solid #62d8ff; }
+  .syb-v3-head h2 { margin:0; color:#ffd84a; font:900 clamp(28px,7vw,48px)/1 Arial,sans-serif; }
+  .syb-v3-close { width:64px; height:64px; border:4px solid #071b35; border-radius:20px; background:#ef596b; color:#fff; font:900 34px/1 Arial; box-shadow:0 6px 0 #7e2232; }
+  .syb-v3-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px; padding:20px 0; }
+  .syb-v3-item { min-height:112px; border:4px solid #62d8ff; border-radius:24px; background:linear-gradient(#236eb1,#103c70); color:#fff; box-shadow:0 7px 0 #04162b; font:900 clamp(17px,4vw,25px)/1.1 Arial; }
+  .syb-v3-item span { display:block; font-size:38px; margin-bottom:8px; }
+
+  /* Chat is a true fullscreen modal with a reachable close control. */
+  #syh-quick-chat-panel.open {
+    position:fixed!important; inset:0!important; width:100dvw!important; height:100dvh!important; max-width:none!important; max-height:none!important;
+    z-index:2147483200!important; margin:0!important; border-radius:0!important; transform:none!important; box-sizing:border-box!important;
+    padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))!important;
+    background:#071b35!important;
+  }
+  #syh-chat-close { position:fixed!important; top:max(14px,env(safe-area-inset-top))!important; right:max(14px,env(safe-area-inset-right))!important; z-index:2147483300!important; width:60px!important; height:60px!important; pointer-events:auto!important; }
+
+  /* Existing story, quiz, quest and large modal panels become fullscreen. */
+  [role="dialog"]:not([aria-hidden="true"]), .quiz-modal.open, .question-modal.open,
+  #stage6-level-intro.open, #stage6-level-complete.open {
+    position:fixed!important; inset:0!important; width:100dvw!important; height:100dvh!important; max-width:none!important; max-height:none!important;
+    z-index:2147482500!important; margin:0!important; border-radius:0!important; overflow:auto!important; box-sizing:border-box!important;
+    padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))!important;
+  }
+
+  @media (orientation:portrait) {
+    #joystick-zone { width:132px!important; height:132px!important; }
+    .syb-v3-grid { grid-template-columns:1fr 1fr; }
+  }
+}
