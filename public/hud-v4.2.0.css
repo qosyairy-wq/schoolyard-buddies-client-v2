@@ -1,0 +1,264 @@
+
+/* ============================================================
+   Schoolyard Buddies v4.2.0
+   Minimalist + Vibrant Production HUD
+   Preserves all existing IDs / JS bindings.
+   ============================================================ */
+
+:root{
+  --syb-hud-safe-top:max(12px,env(safe-area-inset-top));
+  --syb-hud-safe-right:max(12px,env(safe-area-inset-right));
+  --syb-hud-safe-left:max(12px,env(safe-area-inset-left));
+  --syb-hud-safe-bottom:max(12px,env(safe-area-inset-bottom));
+  --syb-hud-gap:10px;
+
+  --syb-hud-navy:#082744;
+  --syb-hud-indigo:#5b5df5;
+  --syb-hud-cyan:#27d7ff;
+  --syb-hud-coral:#ff6178;
+  --syb-hud-yellow:#ffd344;
+  --syb-hud-white:#f8fcff;
+
+  --syb-hud-glass-dark:rgba(7,38,68,.82);
+  --syb-hud-glass-white:rgba(255,255,255,.86);
+  --syb-hud-shadow:0 7px 18px rgba(3,22,42,.20),0 2px 6px rgba(3,22,42,.14);
+}
+
+/* Main overlay never steals gameplay input. */
+#hud{
+  position:fixed !important;
+  inset:0 !important;
+  width:100vw !important;
+  height:100dvh !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+  z-index:19000 !important;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  contain:layout style;
+}
+
+/* Existing left/right wrappers become safe, responsive HUD stacks. */
+#hud .hud-top-left,
+#hud .hud-top-right{
+  position:fixed !important;
+  top:var(--syb-hud-safe-top) !important;
+  display:flex !important;
+  align-items:stretch !important;
+  gap:var(--syb-hud-gap) !important;
+  pointer-events:none !important;
+  transform:translateZ(0);
+  contain:layout style;
+}
+
+#hud .hud-top-left{
+  left:var(--syb-hud-safe-left) !important;
+  right:auto !important;
+  flex-direction:column !important;
+  max-width:min(360px,25vw) !important;
+}
+
+#hud .hud-top-right{
+  right:var(--syb-hud-safe-right) !important;
+  left:auto !important;
+  flex-direction:column !important;
+  align-items:flex-end !important;
+  max-width:min(340px,24vw) !important;
+}
+
+/* Light glass treatment; only interactive items get pointer events. */
+#hud .hud-stat,
+#hud .hud-player-card,
+#hud .hud-map-card,
+#hud .hud-quick-panel,
+#hud .hud-nav-panel,
+#hud .hud-level-panel,
+#hud .hud-action-btn{
+  border:1px solid rgba(255,255,255,.22) !important;
+  border-radius:18px !important;
+  box-shadow:var(--syb-hud-shadow) !important;
+  transform:translateZ(0);
+}
+
+#hud .hud-stat,
+#hud .hud-player-card,
+#hud .hud-map-card,
+#hud .hud-quick-panel,
+#hud .hud-nav-panel,
+#hud .hud-level-panel{
+  background:var(--syb-hud-glass-dark) !important;
+  color:var(--syb-hud-white) !important;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+
+#hud .hud-action-btn,
+#hud button{
+  pointer-events:auto !important;
+  touch-action:manipulation;
+}
+
+/* Compact current quest: visually active and vibrant. */
+#hud #quest-tracker{
+  min-height:58px !important;
+  padding:9px 12px !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:9px !important;
+  border:2px solid rgba(255,255,255,.50) !important;
+  background:linear-gradient(180deg,#fff4bd,#ffd34f) !important;
+  color:var(--syb-hud-navy) !important;
+}
+
+#hud #quest-tracker .hud-icon{
+  flex:0 0 38px !important;
+  width:38px !important;
+  height:38px !important;
+  display:grid !important;
+  place-items:center !important;
+  border-radius:12px !important;
+  background:rgba(255,255,255,.72) !important;
+  font-size:23px !important;
+}
+
+#hud #quest-tracker .hud-quest-copy{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+#hud #quest-tracker .hud-quest-label{
+  font-size:10px !important;
+  font-weight:900 !important;
+  opacity:.68 !important;
+  text-transform:uppercase !important;
+}
+#hud #quest-tracker #hud-quest-text{
+  display:block !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:14px !important;
+  font-weight:950 !important;
+}
+
+/* Modern stat pills. */
+#hud .hud-stat-pill{
+  border-radius:999px !important;
+  border:1px solid rgba(255,255,255,.20) !important;
+  background:rgba(255,255,255,.10) !important;
+  box-shadow:none !important;
+}
+#hud .hud-stat-pill.coin{background:rgba(255,211,68,.18) !important}
+#hud .hud-stat-pill.xp{background:rgba(91,93,245,.22) !important}
+
+/* Buttons: vibrant but restrained. */
+#hud .hud-action-btn{
+  min-height:48px !important;
+  border:1px solid rgba(255,255,255,.25) !important;
+  background:linear-gradient(180deg,#288be8,#1764b6) !important;
+  color:#fff !important;
+  box-shadow:0 4px 10px rgba(3,22,42,.16) !important;
+  transition:transform .12s ease,filter .12s ease !important;
+}
+#hud .hud-action-btn:hover{filter:brightness(1.06)}
+#hud .hud-action-btn:active{transform:translate3d(0,2px,0) scale(.98) !important}
+
+/* Reduce DOM paint cost for verbose desktop cards. */
+#hud .hud-player-card,
+#hud .hud-map-card,
+#hud .hud-quick-panel,
+#hud .hud-nav-panel,
+#hud .hud-level-panel{
+  contain:layout paint style;
+}
+
+/* ------------------------------------------------------------
+   MOBILE
+   ------------------------------------------------------------ */
+@media (hover:none) and (pointer:coarse), (max-width:920px){
+  /* Keep only what is essential while playing. */
+  #hud .hud-player-card,
+  #hud #hud-support-panel,
+  #hud #hud-level-panel,
+  #hud .hud-map-card,
+  #hud .hud-quick-panel,
+  #hud .hud-nav-panel{
+    display:none !important;
+  }
+
+  #hud .hud-top-left,
+  #hud .hud-top-right{
+    max-width:none !important;
+    width:auto !important;
+  }
+
+  /* Quest tracker becomes one compact top-right card. */
+  #hud #quest-tracker{
+    position:fixed !important;
+    top:var(--syb-hud-safe-top) !important;
+    right:var(--syb-hud-safe-right) !important;
+    left:auto !important;
+    width:min(52vw,390px) !important;
+    min-height:50px !important;
+    max-height:68px !important;
+    padding:7px 10px !important;
+    pointer-events:none !important;
+    z-index:19600 !important;
+  }
+
+  #hud #quest-tracker .hud-icon{
+    flex-basis:34px !important;
+    width:34px !important;
+    height:34px !important;
+    font-size:20px !important;
+  }
+  #hud #quest-tracker .hud-quest-label{display:none !important}
+  #hud #quest-tracker #hud-quest-text{
+    font-size:clamp(11px,3vw,15px) !important;
+  }
+
+  /* Dedicated Menu/Chat icons remain in safe left rail. */
+  #syb-mobile-menu-button{
+    left:var(--syb-hud-safe-left) !important;
+    top:var(--syb-hud-safe-top) !important;
+  }
+  #syb-v405-chat-button{
+    left:var(--syb-hud-safe-left) !important;
+    top:calc(var(--syb-hud-safe-top) + 86px) !important;
+  }
+
+  /* No glass blur on mobile gameplay: cheaper paint, same identity. */
+  #hud .hud-stat,
+  #hud .hud-player-card,
+  #hud .hud-map-card,
+  #hud .hud-quick-panel,
+  #hud .hud-nav-panel,
+  #hud .hud-level-panel{
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+}
+
+/* Tiny phones. */
+@media (max-width:430px){
+  #hud #quest-tracker{
+    width:min(50vw,230px) !important;
+  }
+  #hud #quest-tracker #hud-quest-text{
+    font-size:11px !important;
+  }
+}
+
+/* Short landscape phone. */
+@media (hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:520px){
+  #hud #quest-tracker{
+    width:min(42vw,360px) !important;
+    min-height:46px !important;
+    max-height:54px !important;
+  }
+}
+
+/* Reduced motion / lower power. */
+@media (prefers-reduced-motion:reduce){
+  #hud .hud-action-btn{transition:none !important}
+}
